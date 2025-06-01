@@ -50,8 +50,7 @@ export default async function handler(req, res) {
         twitchId: twitchUser.id,
         displayName: twitchUser.display_name,
         profileImage: twitchUser.profile_image_url,
-        email: twitchUser.email || null,
-        lastLogin: admin.firestore.FieldValue.serverTimestamp(),
+        email: twitchUser.email || null
       },
       { merge: true }
     )

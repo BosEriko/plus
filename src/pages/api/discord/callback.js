@@ -46,9 +46,7 @@ export default async function handler(req, res) {
 
     await db.collection('users').doc(uid).set(
       {
-        discordId: discordUser.id,
-        discordUsername: `${discordUser.username}#${discordUser.discriminator}`,
-        lastDiscordConnect: admin.firestore.FieldValue.serverTimestamp(),
+        discordId: discordUser.id
       },
       { merge: true }
     )
