@@ -34,7 +34,7 @@ export default function Home() {
       redirect_uri: `${window.location.origin}/api/discord/callback`,
       response_type: 'code',
       scope: 'identify',
-      firebaseToken: firebaseToken,
+      state: firebaseToken,
     });
 
     window.location.href = `https://discord.com/oauth2/authorize?${params.toString()}`;

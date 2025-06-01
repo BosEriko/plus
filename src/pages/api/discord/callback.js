@@ -14,14 +14,14 @@ if (!admin.apps.length) {
 const db = admin.firestore()
 
 export default async function handler(req, res) {
-  const { code, firebaseToken } = req.query
+  const { code, state } = req.query
 
-  if (!code || !firebaseToken) {
+  if (!code || !state) {
     return res.status(400).json({ error: 'Missing code or firebaseToken' })
   }
 
   try {
-    const decodedToken = await admin.auth().verifyIdToken(firebaseToken)
+    const decodedToken = await admin.auth().verifyIdToken(state)
     const uid = decodedToken.uid
 
     const tokenRes = await axios.post(
