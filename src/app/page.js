@@ -29,13 +29,12 @@ export default function Home() {
 
     const firebaseToken = await user.getIdToken();
 
-    const redirectUriWithToken = `${window.location.origin}/api/discord/callback?firebaseToken=${firebaseToken}`;
-
     const params = new URLSearchParams({
       client_id: env.discordClientId,
-      redirect_uri: redirectUriWithToken,
+      redirect_uri: `${window.location.origin}/api/discord/callback`,
       response_type: 'code',
       scope: 'identify',
+      firebaseToken: firebaseToken,
     });
 
     window.location.href = `https://discord.com/oauth2/authorize?${params.toString()}`;
