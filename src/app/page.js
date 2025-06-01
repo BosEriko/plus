@@ -24,6 +24,22 @@ export default function Home() {
     window.location.href = `https://id.twitch.tv/oauth2/authorize?${params.toString()}`;
   };
 
+  const handleConnectDiscord = async () => {
+    if (!user) return alert("You must be logged in to connect Discord");
+
+    const firebaseToken = await user.getIdToken();
+
+    const params = new URLSearchParams({
+      client_id: env.discordClientId,
+      redirect_uri: `${window.location.origin}/api/discord/callback`,
+      response_type: 'code',
+      scope: 'identify',
+      firebaseToken: firebaseToken,
+    });
+
+    window.location.href = `https://discord.com/oauth2/authorize?${params.toString()}`;
+  };
+
   const handleLogout = async () => {
     await signOut(auth);
     setUser(null);
@@ -34,12 +50,18 @@ export default function Home() {
       <div className="mb-4">{env.siteName}</div>
       {user ? (
         <>
-          <div className="mb-2 text-green-600">Welcome, {user.email}</div>
+          <div className="mb-2 text-green-600">Logged in</div>
           <button
             onClick={handleLogout}
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
           >
             Logout
+          </button>
+          <button
+            onClick={handleConnectDiscord}
+            className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Connect Discord
           </button>
         </>
       ) : (
