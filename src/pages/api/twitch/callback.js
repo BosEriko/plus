@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     const tokenRes = await axios.post('https://id.twitch.tv/oauth2/token', null, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       params: {
-        client_id: process.env.TWITCH_CLIENT_ID,
+        client_id: process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID,
         client_secret: process.env.TWITCH_CLIENT_SECRET,
         code,
         grant_type: 'authorization_code',
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     const userRes = await axios.get('https://api.twitch.tv/helix/users', {
       headers: {
         Authorization: `Bearer ${access_token}`,
-        'Client-Id': process.env.TWITCH_CLIENT_ID,
+        'Client-Id': process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID,
       },
     })
 

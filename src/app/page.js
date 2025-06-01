@@ -13,8 +13,6 @@ export default function Home() {
     return () => unsubscribe();
   }, []);
 
-  console.log("Twitch Client ID:", env.twitchClientId);
-
   const handleLogin = () => {
     const params = new URLSearchParams({
       client_id: env.twitchClientId,
