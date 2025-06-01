@@ -2,14 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "./_utilities/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "./_utilities/firebase";
 import env from "./_utilities/env";
 
 export default function Home() {
   const [user, setUser] = useState(null);
+  const [discordId, setDiscordId] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, setUser);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setUser(firebaseUser);
+
+      if (firebaseUser) {
+        const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          setDiscordId(data.discordId ?? null);
+        }
+      } else {
+        setDiscordId(null);
+      }
+    });
+
     return () => unsubscribe();
   }, []);
 
@@ -57,12 +72,16 @@ export default function Home() {
           >
             Logout
           </button>
-          <button
-            onClick={handleConnectDiscord}
-            className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Connect Discord
-          </button>
+          {discordId ? (
+            <span className="ml-4 text-blue-600 font-semibold">Discord Connected</span>
+          ) : (
+            <button
+              onClick={handleConnectDiscord}
+              className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Connect Discord
+            </button>
+          )}
         </>
       ) : (
         <button

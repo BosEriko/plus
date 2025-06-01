@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import env from "./env"
+import { getFirestore } from "firebase/firestore";
+import env from "./env";
 
 const firebaseConfig = {
   apiKey: env.firebase.apiKey,
@@ -10,9 +11,10 @@ const firebaseConfig = {
   messagingSenderId: env.firebase.messagingSenderId,
   appId: env.firebase.appId,
   measurementId: env.firebase.measurementId,
-}
+};
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-export { auth };
+export { auth, db };
