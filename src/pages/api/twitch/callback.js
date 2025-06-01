@@ -11,6 +11,8 @@ if (!admin.apps.length) {
   })
 }
 
+const db = admin.firestore()
+
 export default async function handler(req, res) {
   const code = req.query.code
 
@@ -42,6 +44,17 @@ export default async function handler(req, res) {
       displayName: twitchUser.display_name,
       profileImage: twitchUser.profile_image_url,
     })
+
+    await db.collection('users').doc(uid).set(
+      {
+        twitchId: twitchUser.id,
+        displayName: twitchUser.display_name,
+        profileImage: twitchUser.profile_image_url,
+        email: twitchUser.email || null,
+        lastLogin: admin.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    )
 
     res.redirect(`/authenticate?token=${customToken}`)
   } catch (error) {
