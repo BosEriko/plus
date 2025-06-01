@@ -18,7 +18,6 @@ export default function Home() {
         const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
         if (userDoc.exists()) {
           const data = userDoc.data();
-          console.log(data);
           setDiscordId(data.discordId ?? null);
         }
       } else {
