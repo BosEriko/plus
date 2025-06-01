@@ -3,6 +3,7 @@
 const env = {
   siteName: process.env.NEXT_PUBLIC_SITE_NAME,
   twitchClientId: process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID,
+  discordClientId: process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID,
   firebase: {
     apiKey: process.env.NEXT_PUBLIC_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
