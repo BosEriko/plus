@@ -1,7 +1,7 @@
-import { Suspense } from 'react'
-import dynamic from 'next/dynamic'
+'use client'
 
-const AuthHandler = dynamic(() => import('./_client/AuthHandler'), { ssr: false })
+import { Suspense } from 'react'
+import AuthHandler from './_client/AuthHandler'
 
 export default function Page() {
   return (
