@@ -1,6 +1,5 @@
 'use client'
-
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getAuth, signInWithCustomToken } from 'firebase/auth'
 import { initializeApp } from 'firebase/app'
@@ -35,5 +34,9 @@ export default function AuthSuccessPage() {
     }
   }, [token])
 
-  return <p>Signing you in...</p>
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <p>Signing you in...</p>
+    </Suspense>
+  );
 }
