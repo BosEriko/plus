@@ -5,7 +5,7 @@ export default function Home() {
   const handleLogin = () => {
     const params = new URLSearchParams({
       client_id: env.twitchClientId,
-      redirect_uri: `${window.location.origin}/api/twitch/callback`,
+      redirect_uri: `${window.location.origin}/authenticate`,
       response_type: 'code',
       scope: 'user:read:email'
     })
