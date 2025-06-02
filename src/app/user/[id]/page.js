@@ -99,7 +99,7 @@ export default function UserPage() {
     }, [userId]);
 
     return (
-        <div className="p-4 max-w-7xl mx-auto">
+        <div className="p-4">
             <h1 className="text-2xl font-bold mb-6">User ID: {userId}</h1>
 
             <div className="flex flex-col md:flex-row gap-8">
