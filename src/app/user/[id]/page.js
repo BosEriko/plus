@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, cloneElement } from 'react';
 import { useParams } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../_utilities/firebase';
@@ -118,19 +118,21 @@ export default function UserPage() {
             colorScheme="dark"
             showWeekdayLabels={true}
             year={2025}
-            renderBlock={(block, activity) => (
-                <span title={`${activity.count} activities on ${activity.date}`}>{block}</span>
-            )}
+            renderBlock={(block, activity) => 
+                cloneElement(block, {
+                title: `${activity.count} activities on ${activity.date}`
+                })
+            }
             labels={{
                 months: [
-                    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
                 ],
                 weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
                 totalCount: '{{count}} messages in the past year',
                 legend: {
-                    less: 'Less',
-                    more: 'More',
+                less: 'Less',
+                more: 'More',
                 },
             }}
             theme={{
