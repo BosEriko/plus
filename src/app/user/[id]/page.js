@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../_utilities/firebase';
 import ActivityCalendar from 'react-activity-calendar';
+import ReactTooltip from 'react-tooltip';
 
 function fillMissingDates(data, startDateStr, endDateStr) {
     const start = new Date(startDateStr);
@@ -101,50 +102,50 @@ export default function UserPage() {
     
     return (
         <div className="p-4">
-        <h1 className="text-xl font-bold">User ID: {userId}</h1>
-        
-        <h2 className="mt-4 font-semibold">User Info</h2>
-        <pre className="bg-gray-100 p-4 rounded">
-        {userData ? JSON.stringify(userData, null, 2) : 'Loading...'}
-        </pre>
-        
-        <h2 className="mt-4 font-semibold">Activity Calendar</h2>
-        {calendarData.length > 0 ? (
-            <ActivityCalendar
-            data={calendarData}
-            blockSize={14}
-            blockRadius={3}
-            blockMargin={4}
-            colorScheme="dark"
-            showWeekdayLabels={true}
-            year={2025}
-            renderBlock={(block, activity) => 
-                cloneElement(block, {
-                title: `${activity.count} activities on ${activity.date}`
-                })
-            }
-            labels={{
-                months: [
-                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-                ],
-                weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                totalCount: '{{count}} messages in the past year',
-                legend: {
-                less: 'Less',
-                more: 'More',
-                },
-            }}
-            theme={{
-                dark: ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'],
-            }}
-            tooltipDataAttrs={value => ({
-                'data-tip': `${value.date}: ${value.count} messages`,
-            })}
-            />
-        ) : (
-            <p className="text-gray-500 italic">No activity data found.</p>
-        )}
+            <h1 className="text-xl font-bold">User ID: {userId}</h1>
+            
+            <h2 className="mt-4 font-semibold">User Info</h2>
+            <pre className="bg-gray-100 p-4 rounded">
+                {userData ? JSON.stringify(userData, null, 2) : 'Loading...'}
+            </pre>
+            
+            <h2 className="mt-4 font-semibold">Activity Calendar</h2>
+            {calendarData.length > 0 ? (
+                <>
+                <ActivityCalendar
+                    data={calendarData}
+                    blockSize={14}
+                    blockRadius={3}
+                    blockMargin={4}
+                    colorScheme="dark"
+                    showWeekdayLabels={true}
+                    year={2025}
+                    renderBlock={(block, activity) => 
+                        cloneElement(block, {
+                            'data-tip': `${activity.count} activities on ${activity.date}`, // set data-tip here
+                        })
+                    }
+                    labels={{
+                        months: [
+                            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                        ],
+                        weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                        totalCount: '{{count}} messages in the past year',
+                        legend: {
+                            less: 'Less',
+                            more: 'More',
+                        },
+                    }}
+                    theme={{
+                        dark: ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'],
+                    }}
+                />
+                <ReactTooltip place="top" type="dark" effect="solid" />
+                </>
+            ) : (
+                <p className="text-gray-500 italic">No activity data found.</p>
+            )}
         </div>
     );
 }
