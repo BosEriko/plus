@@ -6,6 +6,28 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../_utilities/firebase';
 import ActivityCalendar from 'react-activity-calendar';
 
+function fillMissingDates(data, startDateStr, endDateStr) {
+  const start = new Date(startDateStr);
+  const end = new Date(endDateStr);
+
+  const dateMap = new Map(data.map(d => [d.date, d]));
+
+  const filled = [];
+  let current = new Date(start);
+
+  while (current <= end) {
+    const iso = current.toISOString().slice(0, 10);
+    if (dateMap.has(iso)) {
+      filled.push(dateMap.get(iso));
+    } else {
+      filled.push({ date: iso, count: 0, level: 0 });
+    }
+    current.setDate(current.getDate() + 1);
+  }
+
+  return filled;
+}
+
 export default function UserPage() {
   const params = useParams();
   const userId = params.id;
@@ -33,6 +55,9 @@ export default function UserPage() {
         if (messagesSnap.exists()) {
           const content = messagesSnap.data().content || [];
 
+          const startDateStr = '2024-06-03';
+          const endDateStr = '2025-06-02';
+
           if (content.length > 0) {
             const counts = content.map(item => item.twitchMessageCount);
             const max = Math.max(...counts);
@@ -55,8 +80,16 @@ export default function UserPage() {
               };
             });
 
-            setCalendarData(transformed);
+            const fullYearData = fillMissingDates(transformed, startDateStr, endDateStr);
+            setCalendarData(fullYearData);
+          } else {
+            // No content - fill full year with zeros
+            setCalendarData(fillMissingDates([], startDateStr, endDateStr));
           }
+        } else {
+          const startDateStr = '2024-06-03';
+          const endDateStr = '2025-06-02';
+          setCalendarData(fillMissingDates([], startDateStr, endDateStr));
         }
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -65,6 +98,8 @@ export default function UserPage() {
 
     fetchData();
   }, [userId]);
+
+  console.log("data", calendarData);
 
   return (
     <div className="p-4">
@@ -78,27 +113,28 @@ export default function UserPage() {
       <h2 className="mt-4 font-semibold">Activity Calendar</h2>
       {calendarData.length > 0 ? (
         <ActivityCalendar
-            data={calendarData}
-            blockSize={14}
-            blockRadius={3}
-            blockMargin={4}
-            colorScheme="dark"
-            showWeekdayLabels={true}
-            labels={{
-                months: [
-                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-                ],
-                weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                totalCount: '{{count}} messages in {{year}}',
-                legend: {
-                less: 'Less',
-                more: 'More',
-                },
-            }}
-            theme={{
-                dark: ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'],
-            }}
+          data={calendarData}
+          blockSize={14}
+          blockRadius={3}
+          blockMargin={4}
+          colorScheme="dark"
+          showWeekdayLabels={true}
+          year={2025} // Use 2025 because your end date is 2025-06-02
+          labels={{
+            months: [
+              'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+            ],
+            weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            totalCount: '{{count}} messages in {{year}}',
+            legend: {
+              less: 'Less',
+              more: 'More',
+            },
+          }}
+          theme={{
+            dark: ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'],
+          }}
         />
       ) : (
         <p className="text-gray-500 italic">No activity data found.</p>
