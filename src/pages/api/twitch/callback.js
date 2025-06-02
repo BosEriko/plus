@@ -68,10 +68,8 @@ export default async function handler(req, res) {
 
     await db.collection('users').doc(uid).set(
       {
-        twitchId: twitchUser.id,
         displayName: twitchUser.display_name,
-        profileImage: twitchUser.profile_image_url,
-        email: twitchUser.email || null
+        profileImage: twitchUser.profile_image_url
       },
       { merge: true }
     )
