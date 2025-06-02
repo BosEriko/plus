@@ -38,8 +38,29 @@ export default async function handler(req, res) {
     })
 
     const twitchUser = userRes.data.data[0]
-
     const uid = twitchUser.id
+
+    if (twitchUser.email) {
+      try {
+        await admin.auth().updateUser(uid, {
+          email: twitchUser.email,
+          displayName: twitchUser.display_name,
+          photoURL: twitchUser.profile_image_url,
+        })
+      } catch (err) {
+        if (err.code === 'auth/user-not-found') {
+          await admin.auth().createUser({
+            uid,
+            email: twitchUser.email,
+            displayName: twitchUser.display_name,
+            photoURL: twitchUser.profile_image_url,
+          })
+        } else {
+          throw err
+        }
+      }
+    }
+
     const customToken = await admin.auth().createCustomToken(uid, {
       displayName: twitchUser.display_name,
       profileImage: twitchUser.profile_image_url,
