@@ -39,7 +39,7 @@ export default async function handler(req, res) {
 
     const twitchUser = userRes.data.data[0]
 
-    const uid = `twitch:${twitchUser.id}`
+    const uid = twitchUser.id
     const customToken = await admin.auth().createCustomToken(uid, {
       displayName: twitchUser.display_name,
       profileImage: twitchUser.profile_image_url,
