@@ -99,8 +99,6 @@ export default function UserPage() {
         fetchData();
     }, [userId]);
     
-    console.log("data", calendarData);
-    
     return (
         <div className="p-4">
         <h1 className="text-xl font-bold">User ID: {userId}</h1>
@@ -120,6 +118,9 @@ export default function UserPage() {
             colorScheme="dark"
             showWeekdayLabels={true}
             year={2025}
+            renderBlock={(block, activity) => (
+                <span title={`${activity.count} activities on ${activity.date}`}>{block}</span>
+            )}
             labels={{
                 months: [
                     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
