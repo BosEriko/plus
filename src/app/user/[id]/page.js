@@ -78,17 +78,27 @@ export default function UserPage() {
       <h2 className="mt-4 font-semibold">Activity Calendar</h2>
       {calendarData.length > 0 ? (
         <ActivityCalendar
-          data={calendarData}
-          blockSize={14}
-          blockRadius={3}
-          blockMargin={4}
-          labels={{
-            totalCount: '{{count}} messages in {{year}}',
-          }}
-          theme={{
-            light: ['#ebedf0', '#c6e48b', '#7bc96f', '#239a3b', '#196127'],
-            dark: ['#1c1c1c', '#003f1f', '#007733', '#00b352', '#00e36f'],
-          }}
+            data={calendarData}
+            blockSize={14}
+            blockRadius={3}
+            blockMargin={4}
+            colorScheme="dark"
+            showWeekdayLabels={true}
+            labels={{
+                months: [
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                ],
+                weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                totalCount: '{{count}} messages in {{year}}',
+                legend: {
+                less: 'Less',
+                more: 'More',
+                },
+            }}
+            theme={{
+                dark: ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'],
+            }}
         />
       ) : (
         <p className="text-gray-500 italic">No activity data found.</p>
