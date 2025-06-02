@@ -49,7 +49,7 @@ export default function UserPage() {
               if (count >= min + step * 4) level = 4;
 
               return {
-                date: item.timestamp,
+                date: new Date(item.timestamp).toISOString().split('T')[0],
                 count,
                 level,
               };
@@ -71,22 +71,28 @@ export default function UserPage() {
       <h1 className="text-xl font-bold">User ID: {userId}</h1>
 
       <h2 className="mt-4 font-semibold">User Info</h2>
-      <pre className="bg-gray-100 p-4 rounded">{JSON.stringify(userData, null, 2)}</pre>
+      <pre className="bg-gray-100 p-4 rounded">
+        {userData ? JSON.stringify(userData, null, 2) : 'Loading...'}
+      </pre>
 
       <h2 className="mt-4 font-semibold">Activity Calendar</h2>
-      <ActivityCalendar
-        data={calendarData}
-        blockSize={14}
-        blockRadius={3}
-        blockMargin={4}
-        labels={{
-          totalCount: '{{count}} messages in {{year}}',
-        }}
-        theme={{
-          light: ['#ebedf0', '#c6e48b', '#7bc96f', '#239a3b', '#196127'],
-          dark: ['#1c1c1c', '#003f1f', '#007733', '#00b352', '#00e36f'],
-        }}
-      />
+      {calendarData.length > 0 ? (
+        <ActivityCalendar
+          data={calendarData}
+          blockSize={14}
+          blockRadius={3}
+          blockMargin={4}
+          labels={{
+            totalCount: '{{count}} messages in {{year}}',
+          }}
+          theme={{
+            light: ['#ebedf0', '#c6e48b', '#7bc96f', '#239a3b', '#196127'],
+            dark: ['#1c1c1c', '#003f1f', '#007733', '#00b352', '#00e36f'],
+          }}
+        />
+      ) : (
+        <p className="text-gray-500 italic">No activity data found.</p>
+      )}
     </div>
   );
 }
