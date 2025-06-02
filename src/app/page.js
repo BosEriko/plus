@@ -5,6 +5,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "./_utilities/firebase";
 import env from "./_utilities/env";
+import Link from "next/link";
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -82,6 +83,12 @@ export default function Home() {
               Connect Discord
             </button>
           )}
+          <Link
+            href={`/user/${user.uid}`}
+            className="ml-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 inline-block"
+          >
+            Profile
+          </Link>
         </>
       ) : (
         <button
