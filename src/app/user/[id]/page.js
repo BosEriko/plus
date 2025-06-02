@@ -100,8 +100,6 @@ export default function UserPage() {
 
     return (
         <div className="p-4">
-            <h1 className="text-2xl font-bold mb-6">User ID: {userId}</h1>
-
             <div className="flex flex-col md:flex-row gap-8">
                 {/* Left Column - Profile */}
                 <section className="flex-shrink-0 md:w-1/3 bg-gray-800 rounded-md p-6 text-white flex flex-col items-center">
