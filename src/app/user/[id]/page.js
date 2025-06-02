@@ -119,14 +119,14 @@ export default function UserPage() {
             blockMargin={4}
             colorScheme="dark"
             showWeekdayLabels={true}
-            year={2025} // Use 2025 because your end date is 2025-06-02
+            year={2025}
             labels={{
                 months: [
                     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
                 ],
                 weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                totalCount: '{{count}} messages in {{year}}',
+                totalCount: '{{count}} messages in the past year',
                 legend: {
                     less: 'Less',
                     more: 'More',
@@ -135,6 +135,9 @@ export default function UserPage() {
             theme={{
                 dark: ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'],
             }}
+            tooltipDataAttrs={value => ({
+                'data-tip': `${value.date}: ${value.count} messages`,
+            })}
             />
         ) : (
             <p className="text-gray-500 italic">No activity data found.</p>
