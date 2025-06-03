@@ -114,9 +114,16 @@ export default function UserPage() {
                             <p className="mb-1">
                                 Points: <span className="font-medium">{userData.points}</span>
                             </p>
-                            <p>
-                                Twitch Messages: <span className="font-medium">{userData.twitchMessageCount}</span>
-                            </p>
+                            {userData.twitchMessageCount && (
+                                <p>
+                                    Twitch Messages: <span className="font-medium">{userData.twitchMessageCount}</span>
+                                </p>
+                            )}
+                            {userData.discordMessageCount && (
+                                <p>
+                                    Discord Messages: <span className="font-medium">{userData.discordMessageCount}</span>
+                                </p>
+                            )}
                         </>
                     ) : (
                         <p>Loading user info...</p>
