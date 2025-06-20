@@ -32,7 +32,7 @@ export default function Home() {
   const handleLogin = () => {
     const params = new URLSearchParams({
       client_id: env.twitchClientId,
-      redirect_uri: `${window.location.origin}/api/twitch/callback`,
+      redirect_uri: env.twitchRedirectUrl,
       response_type: 'code',
       scope: 'user:read:email'
     });
@@ -47,7 +47,7 @@ export default function Home() {
 
     const params = new URLSearchParams({
       client_id: env.discordClientId,
-      redirect_uri: `${window.location.origin}/api/discord/callback`,
+      redirect_uri: env.discordRedirectUrl,
       response_type: 'code',
       scope: 'identify',
       state: firebaseToken,

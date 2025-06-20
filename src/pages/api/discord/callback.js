@@ -27,11 +27,11 @@ export default async function handler(req, res) {
     const tokenRes = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
-        client_id: process.env.DISCORD_CLIENT_ID,
-        client_secret: process.env.DISCORD_CLIENT_SECRET,
+        client_id: process.env.DISCORD_APP_CLIENT_ID,
+        client_secret: process.env.DISCORD_APP_CLIENT_SECRET,
         code,
         grant_type: 'authorization_code',
-        redirect_uri: process.env.DISCORD_REDIRECT_URI,
+        redirect_uri: process.env.DISCORD_APP_REDIRECT_URL,
       }),
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
     )
