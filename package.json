@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "develop": "next dev --turbopack",
+    "develop": "next dev --turbopack --port 4000",
     "build": "next build",
     "start": "next start",
     "release": "vercel --prod",
