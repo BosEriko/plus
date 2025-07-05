@@ -1,0 +1,38 @@
+{
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "restoreTerminals.terminals": [
+    {
+      "splitTerminals": [
+        {
+          "name": "Open Browser",
+          "commands": ["wslview http://localhost:4000/ && exit"]
+        }
+      ]
+    },
+    {
+      "splitTerminals": [
+        {
+          "name": "Node Server (BotEriko)",
+          "commands": ["cd $(eval echo $BOTERIKO_DIRECTORY) && yarn develop"]
+        }
+      ]
+    },
+    {
+      "splitTerminals": [
+        {
+          "name": "Node Server (BosEriko+)",
+          "commands": ["cd $(eval echo $BOS_ERIKO_PLUS_DIRECTORY) && yarn develop"]
+        }
+      ]
+    },
+    {
+      "splitTerminals": [
+        {
+          "name": "Terminal",
+          "commands": ["cd $(eval echo $BOS_ERIKO_PLUS_DIRECTORY) && clear"]
+        }
+      ]
+    }
+  ]
+}
