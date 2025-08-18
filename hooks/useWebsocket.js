@@ -29,7 +29,6 @@ export const WebSocketProvider = ({ children }) => {
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log('📨 Received from bot:', data);
         setWsData(data);
       };
 
