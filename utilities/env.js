@@ -3,10 +3,7 @@
 const env = {
   siteName: process.env.NEXT_PUBLIC_SITE_NAME,
   websocket: process.env.NEXT_PUBLIC_WEBSOCKET,
-  twitchClientId: process.env.NEXT_PUBLIC_TWITCH_APP_CLIENT_ID,
-  discordClientId: process.env.NEXT_PUBLIC_DISCORD_APP_CLIENT_ID,
-  twitchRedirectUrl: process.env.NEXT_PUBLIC_TWITCH_APP_REDIRECT_URL,
-  discordRedirectUrl: process.env.NEXT_PUBLIC_DISCORD_APP_REDIRECT_URL,
+  server: process.env.NEXT_PUBLIC_SERVER,
   firebase: {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,

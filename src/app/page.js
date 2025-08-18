@@ -30,30 +30,12 @@ export default function Home() {
   }, []);
 
   const handleLogin = () => {
-    const params = new URLSearchParams({
-      client_id: env.twitchClientId,
-      redirect_uri: env.twitchRedirectUrl,
-      response_type: 'code',
-      scope: 'user:read:email'
-    });
-
-    window.location.href = `https://id.twitch.tv/oauth2/authorize?${params.toString()}`;
+    window.location.href = `${env.server}/api/authentication/twitch/login`;
   };
 
   const handleConnectDiscord = async () => {
-    if (!user) return alert("You must be logged in to connect Discord");
-
     const firebaseToken = await user.getIdToken();
-
-    const params = new URLSearchParams({
-      client_id: env.discordClientId,
-      redirect_uri: env.discordRedirectUrl,
-      response_type: 'code',
-      scope: 'identify',
-      state: firebaseToken,
-    });
-
-    window.location.href = `https://discord.com/oauth2/authorize?${params.toString()}`;
+    window.location.href = `${env.server}/api/authentication/discord/connect?token=${encodeURIComponent(firebaseToken)}`;
   };
 
   const handleLogout = async () => {
