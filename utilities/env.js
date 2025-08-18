@@ -2,6 +2,7 @@
 // More Information: https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser
 const env = {
   siteName: process.env.NEXT_PUBLIC_SITE_NAME,
+  websocket: process.env.NEXT_PUBLIC_WEBSOCKET,
   twitchClientId: process.env.NEXT_PUBLIC_TWITCH_APP_CLIENT_ID,
   discordClientId: process.env.NEXT_PUBLIC_DISCORD_APP_CLIENT_ID,
   twitchRedirectUrl: process.env.NEXT_PUBLIC_TWITCH_APP_REDIRECT_URL,

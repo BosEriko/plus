@@ -2,7 +2,7 @@
 import { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { signInWithCustomToken } from 'firebase/auth'
-import { auth } from "../../_utilities/firebase";
+import { auth } from "@utilities/firebase";
 
 export default function AuthHandler() {
   const router = useRouter()

@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "./_utilities/firebase";
-import env from "./_utilities/env";
+import { auth, db } from "@utilities/firebase";
+import env from "@utilities/env";
 import Link from "next/link";
 
 export default function Home() {
