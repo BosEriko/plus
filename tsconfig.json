@@ -25,7 +25,11 @@
     "paths": {
       "@/*": ["./*"],
       "@hooks/*": ["./hooks/*"],
-      "@utilities/*": ["./utilities/*"]
+      "@utilities/*": ["./utilities/*"],
+      "@atom": ["./components/atoms"],
+      "@molecule": ["./components/molecules"],
+      "@organism": ["./components/organisms"],
+      "@template": ["./components/templates"],
     },
     "strictNullChecks": true
   },

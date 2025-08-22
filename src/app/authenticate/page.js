@@ -1,12 +1,12 @@
 'use client'
 
 import { Suspense } from 'react'
-import AuthHandler from './_client/AuthHandler'
+import Organism from '@organism'
 
 export default function Page() {
   return (
     <Suspense fallback={<p>Loading...</p>}>
-      <AuthHandler />
+      <Organism.Authenticate />
     </Suspense>
   )
 }
