@@ -79,83 +79,77 @@ export default function UserPage() {
         </div>
 
         {/* User Info */}
-        <div className="mt-16 px-6 flex flex-col md:flex-row md:justify-between md:items-start gap-6">
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold text-[#f7b43d]">
-              {user.attributes.displayName}
-            </h1>
-
+        <div className="mt-12 px-6 flex flex-col md:flex-row md:justify-between md:items-start gap-6">
+          <div className="flex-1 flex gap-2 flex-col">
+            <h1 className="text-3xl font-bold text-[#f7b43d]">{user.attributes.displayName}</h1>
             {connection && (
-              <div className="mt-4">
+              <Atom.Card>
                 <h2 className="font-semibold text-gray-800 mb-2">Connections</h2>
                 {connection.attributes.discord && <p>Discord: {connection.attributes.discord}</p>}
                 {connection.attributes.tetrio && <p>Tetr.io: {connection.attributes.tetrio}</p>}
-              </div>
+              </Atom.Card>
             )}
 
-            {/* Calendar Heatmaps */}
-            {(discordData.length > 0 || twitchData.length > 0) && (
-              <div className="mt-6 flex flex-col gap-6">
-                {/* Discord Heatmap */}
-                <div>
-                  <h3 className="font-semibold text-gray-800 mb-2">
-                    Discord Activity — Total: {totalCount(discordData)}
-                  </h3>
-                  <CalendarHeatmap
-                    startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))}
-                    endDate={new Date()}
-                    values={discordData}
-                    classForValue={(value) => ''}
-                    style={{}}
-                    gutterSize={2}
-                    transformDayElement={(rect, value, index) => (
-                      <Tooltip
-                        key={index}
-                        title={`${value?.date || 'N/A'}: ${value?.count || 0}`}
-                        placement="top"
-                      >
-                        {React.cloneElement(rect, {
-                          style: {
-                            fill: getColor(value?.count),
-                            stroke: '#ccc',
-                          },
-                        })}
-                      </Tooltip>
-                    )}
-                    showWeekdayLabels
-                  />
-                </div>
+            {(discordData.length > 0) && (
+              <Atom.Card>
+                <h3 className="font-semibold text-gray-800 mb-2">
+                  Discord Activity — Total: {totalCount(discordData)}
+                </h3>
+                <CalendarHeatmap
+                  startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))}
+                  endDate={new Date()}
+                  values={discordData}
+                  classForValue={(value) => ''}
+                  style={{}}
+                  gutterSize={2}
+                  transformDayElement={(rect, value, index) => (
+                    <Tooltip
+                      key={index}
+                      title={`${value?.date || 'N/A'}: ${value?.count || 0}`}
+                      placement="top"
+                    >
+                      {React.cloneElement(rect, {
+                        style: {
+                          fill: getColor(value?.count),
+                          stroke: '#ccc',
+                        },
+                      })}
+                    </Tooltip>
+                  )}
+                  showWeekdayLabels
+                />
+              </Atom.Card>
+            )}
 
-                {/* Twitch Heatmap */}
-                <div>
-                  <h3 className="font-semibold text-gray-800 mb-2">
-                    Twitch Activity — Total: {totalCount(twitchData)}
-                  </h3>
-                  <CalendarHeatmap
-                    startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))}
-                    endDate={new Date()}
-                    values={twitchData}
-                    classForValue={(value) => ''}
-                    style={{}}
-                    gutterSize={2}
-                    transformDayElement={(rect, value, index) => (
-                      <Tooltip
-                        key={index}
-                        title={`${value?.date || 'N/A'}: ${value?.count || 0}`}
-                        placement="top"
-                      >
-                        {React.cloneElement(rect, {
-                          style: {
-                            fill: getColor(value?.count),
-                            stroke: '#ccc',
-                          },
-                        })}
-                      </Tooltip>
-                    )}
-                    showWeekdayLabels
-                  />
-                </div>
-              </div>
+            {(twitchData.length > 0) && (
+              <Atom.Card>
+                <h3 className="font-semibold text-gray-800 mb-2">
+                  Twitch Activity — Total: {totalCount(twitchData)}
+                </h3>
+                <CalendarHeatmap
+                  startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))}
+                  endDate={new Date()}
+                  values={twitchData}
+                  classForValue={(value) => ''}
+                  style={{}}
+                  gutterSize={2}
+                  transformDayElement={(rect, value, index) => (
+                    <Tooltip
+                      key={index}
+                      title={`${value?.date || 'N/A'}: ${value?.count || 0}`}
+                      placement="top"
+                    >
+                      {React.cloneElement(rect, {
+                        style: {
+                          fill: getColor(value?.count),
+                          stroke: '#ccc',
+                        },
+                      })}
+                    </Tooltip>
+                  )}
+                  showWeekdayLabels
+                />
+              </Atom.Card>
             )}
           </div>
 
