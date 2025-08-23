@@ -6,18 +6,22 @@ import { auth } from '@utilities/firebase';
 
 const useAuthStore = create((set) => ({
   user: null,
+  token: null,
   loading: true,
 
   initAuth: () => {
     return onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
+        const token = await firebaseUser.getIdToken();
         set({
           user: firebaseUser,
+          token,
           loading: false,
         });
       } else {
         set({
           user: null,
+          token: null,
           loading: false,
         });
       }
@@ -26,7 +30,7 @@ const useAuthStore = create((set) => ({
 
   logout: async () => {
     await signOut(auth);
-    set({ user: null });
+    set({ user: null, token: null });
   },
 }));
 

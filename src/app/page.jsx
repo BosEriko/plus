@@ -6,29 +6,36 @@ import Template from '@template';
 import useAuthStore from '@stores/useAuthStore';
 
 export default function Home() {
-  const { user, loading } = useAuthStore();
+  const { user, token, loading } = useAuthStore();
   const [tetrioId, setTetrioId] = useState(null);
   const [tetrioUsername, setTetrioUsername] = useState('');
   const [loadingTetrio, setLoadingTetrio] = useState(false);
   const [tetrioMessage, setTetrioMessage] = useState('');
 
   const handleConnectDiscord = async () => {
-    const firebaseToken = await user.getIdToken();
-    window.location.href = `${env.server}/api/authentication/discord/connect?token=${encodeURIComponent(firebaseToken)}`;
+    if (!token) {
+      alert('Please log in first');
+      return;
+    }
+
+    window.location.href = `${env.server}/api/authentication/discord/connect?token=${encodeURIComponent(token)}`;
   };
 
   const handleConnectTetrio = async () => {
+    if (!token) {
+      setTetrioMessage('❌ Please log in first');
+      return;
+    }
+
     try {
       setLoadingTetrio(true);
       setTetrioMessage('');
-
-      const firebaseToken = await user.getIdToken();
 
       const response = await fetch(`${env.server}/api/authentication/tetrio/connect`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${firebaseToken}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ username: tetrioUsername }),
       });
@@ -49,52 +56,48 @@ export default function Home() {
     }
   };
 
-  const DiscordButton = () => {
-    return (
-      <button
-        onClick={handleConnectDiscord}
-        className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        Connect Discord
-      </button>
-    );
-  }
+  const DiscordButton = () => (
+    <button
+      onClick={handleConnectDiscord}
+      className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+    >
+      Connect Discord
+    </button>
+  );
 
-  const TetrioButton = () => {
-    return (
-      <div>
-        {tetrioId ? (
-          <span className="text-green-600 font-semibold">TETR.IO Connected</span>
-        ) : (
-          <div className="flex gap-2 items-center">
-            <input
-              type="text"
-              placeholder="Enter TETR.IO username"
-              value={tetrioUsername}
-              onChange={(e) => setTetrioUsername(e.target.value)}
-              className="border px-4 py-2 rounded"
-            />
-            <button
-              onClick={handleConnectTetrio}
-              disabled={loadingTetrio || !tetrioUsername}
-              className="ml-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400"
-            >
-              {loadingTetrio ? 'Connecting...' : 'Connect TETR.IO'}
-            </button>
-          </div>
-        )}
-        {tetrioMessage && (
-          <p
-            className={`mt-2 text-sm ${
-              tetrioMessage.startsWith('✅') ? 'text-green-600' : 'text-red-600'
-            }`}
+  const TetrioButton = () => (
+    <div>
+      {tetrioId ? (
+        <span className="text-green-600 font-semibold">TETR.IO Connected</span>
+      ) : (
+        <div className="flex gap-2 items-center">
+          <input
+            type="text"
+            placeholder="Enter TETR.IO username"
+            value={tetrioUsername}
+            onChange={(e) => setTetrioUsername(e.target.value)}
+            className="border px-4 py-2 rounded"
+          />
+          <button
+            onClick={handleConnectTetrio}
+            disabled={loadingTetrio || !tetrioUsername}
+            className="ml-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400"
           >
-            {tetrioMessage}
-          </p>
-        )}
-      </div>
-    );
-  }
+            {loadingTetrio ? 'Connecting...' : 'Connect TETR.IO'}
+          </button>
+        </div>
+      )}
+      {tetrioMessage && (
+        <p
+          className={`mt-2 text-sm ${
+            tetrioMessage.startsWith('✅') ? 'text-green-600' : 'text-red-600'
+          }`}
+        >
+          {tetrioMessage}
+        </p>
+      )}
+    </div>
+  );
 
   if (loading) {
     return <div className="text-gray-600 p-4">Loading...</div>;
