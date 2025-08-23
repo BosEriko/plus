@@ -47,10 +47,10 @@ export default function User() {
 
   return (
     <Template.Profile>
-      <div className="container mx-auto py-5">
+      <div className="container mx-auto pb-5">
         <div className="relative w-full bg-gray-200 rounded-xl">
           {user?.attributes?.coverPhoto && (
-            <div className="overflow-hidden rounded-xl">
+            <div className="overflow-hidden rounded-b-xl">
               <Parallax bgImage={user.attributes.coverPhoto} bgImageAlt="Cover Photo" blur={2}>
                 <div className="aspect-[16/4] flex items-center justify-center">
                   <div className="flex flex-col gap-3">
@@ -70,7 +70,7 @@ export default function User() {
         </div>
 
         {/* User Info */}
-        <div className="mt-12 px-6 flex flex-col md:flex-row md:justify-between md:items-start gap-6">
+        <div className="mt-5 px-5 flex flex-col md:flex-row md:justify-between md:items-start gap-5">
           <div className="flex-1 flex gap-2 flex-col">
             {connection?.attributes && (
               <Atom.Card>
