@@ -26,6 +26,7 @@
       "@/*": ["./*"],
       "@hooks/*": ["./hooks/*"],
       "@utilities/*": ["./utilities/*"],
+      "@stores/*": ["./stores/*"],
       "@atom": ["./components/atoms"],
       "@molecule": ["./components/molecules"],
       "@organism": ["./components/organisms"],
