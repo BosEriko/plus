@@ -7,6 +7,8 @@ import { auth, db } from "@utilities/firebase";
 import env from "@utilities/env";
 import Link from "next/link";
 
+import Template from "@template";
+
 export default function Home() {
   const [user, setUser] = useState(null);
   const [discordId, setDiscordId] = useState(null);
@@ -83,9 +85,8 @@ export default function Home() {
 
   return (
     <div>
-      <div className="mb-4">{env.siteName}</div>
       {user ? (
-        <>
+        <Template.Dashboard>
           <div className="mb-2 text-green-600">Logged in</div>
           <button
             onClick={handleLogout}
@@ -146,14 +147,16 @@ export default function Home() {
           >
             Profile
           </Link>
-        </>
+        </Template.Dashboard>
       ) : (
-        <button
-          onClick={handleLogin}
-          className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-        >
-          Login with Twitch
-        </button>
+        <Template.Landing>
+          <button
+            onClick={handleLogin}
+            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+          >
+            Login with Twitch
+          </button>
+        </Template.Landing>
       )}
     </div>
   );

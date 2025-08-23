@@ -1,6 +1,12 @@
+import Organism from "@organism";
+
 const Landing = ({ children }) => {
   return (
-    <div>{children}</div>
+    <div>
+      <Organism.Header />
+      <div>{children}</div>
+      <Organism.Footer />
+    </div>
   );
 }
 
