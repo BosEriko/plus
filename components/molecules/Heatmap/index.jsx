@@ -18,15 +18,7 @@ CalendarHeatmap.prototype.getHeight = function () {
   return this.getWeekWidth() + (this.getMonthLabelSize() - this.props.gutterSize);
 };
 
-const getColor = (count) => {
-  if (!count || count === 0) return '#fff8e7';
-  if (count < 5) return '#fff1b8';
-  if (count < 15) return '#ffe58f';
-  if (count < 30) return '#ffd666';
-  return '#f7b43d';
-};
-
-const Heatmap = ({ content = {}, type = 'discord', title = '', showWeekdayLabels = true }) => {
+const Heatmap = ({ content = {}, type = 'discord', showWeekdayLabels = true }) => {
   const values = useMemo(() => {
     const dates = [];
     const today = new Date();
@@ -49,14 +41,27 @@ const Heatmap = ({ content = {}, type = 'discord', title = '', showWeekdayLabels
   }, [content, type]);
 
   const totalCount = values.reduce((sum, day) => sum + (day.count || 0), 0);
+  const maxCount = Math.max(...values.map(v => v.count));
+
+  const getColor = (count) => {
+    if (!count || count === 0) return '#fff8e7';
+
+    const ratio = count / maxCount;
+    if (ratio < 0.2) return '#fff1b8';
+    if (ratio < 0.4) return '#ffe58f';
+    if (ratio < 0.6) return '#ffd666';
+    if (ratio < 0.8) return '#f7b43d';
+    return '#d48806';
+  };
 
   return (
     <div>
-      {title && <h3 className="font-semibold text-gray-800 mb-2">{title} — Total: {totalCount}</h3>}
+      <h3 className="font-semibold text-gray-800 mb-2">{totalCount} contributions in the last year on <span className="capitalize">{type}</span></h3>
       <CalendarHeatmap
         startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))}
         endDate={new Date()}
         values={values}
+        className="custom-heatmap"
         classForValue={() => ''}
         gutterSize={1}
         transformDayElement={(rect, value, index) => (
@@ -79,6 +84,12 @@ const Heatmap = ({ content = {}, type = 'discord', title = '', showWeekdayLabels
         )}
         showWeekdayLabels={showWeekdayLabels}
       />
+
+      <style jsx global>{`
+        .custom-heatmap text {
+          font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+      `}</style>
     </div>
   );
 };

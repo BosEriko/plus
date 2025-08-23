@@ -76,19 +76,17 @@ export default function UserPage() {
 
             {daily?.attributes?.content && (
               <>
-                <Atom.Card>
+                {connection.attributes.discord && <Atom.Card>
                   <Molecule.Heatmap
                     content={daily.attributes.content}
                     type="discord"
-                    title="Discord Activity"
                   />
-                </Atom.Card>
+                </Atom.Card>}
 
                 <Atom.Card>
                   <Molecule.Heatmap
                     content={daily.attributes.content}
                     type="twitch"
-                    title="Twitch Activity"
                   />
                 </Atom.Card>
               </>
