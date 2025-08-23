@@ -1,10 +1,13 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Template from '@template';
 import env from '@utilities/env';
 import Atom from '@atom';
+import CalendarHeatmap from 'react-calendar-heatmap';
+import { Tooltip } from 'antd';
+import 'react-calendar-heatmap/dist/styles.css';
 
 export default function UserPage() {
   const params = useParams();
@@ -39,7 +42,20 @@ export default function UserPage() {
 
   const { user, connection, wallet, statistic, daily } = data;
 
-  console.log(daily);
+  const discordData = Array.isArray(daily?.discord) ? daily.discord : [];
+  const twitchData = Array.isArray(daily?.twitch) ? daily.twitch : [];
+
+  // Helper to compute total
+  const totalCount = (arr) => arr.reduce((sum, day) => sum + (day.count || 0), 0);
+
+  // Function to map count to gold color
+  const getColor = (count) => {
+    if (!count || count === 0) return '#fff8e7';
+    if (count < 5) return '#fff1b8';
+    if (count < 15) return '#ffe58f';
+    if (count < 30) return '#ffd666';
+    return '#f7b43d';
+  };
 
   return (
     <Template.Profile>
@@ -53,7 +69,6 @@ export default function UserPage() {
               className="w-full h-full object-cover"
             />
           )}
-          {/* Profile Picture */}
           <div className="absolute bottom-[-40px] left-6">
             <img
               src={user.attributes.profileImage}
@@ -75,6 +90,71 @@ export default function UserPage() {
                 <h2 className="font-semibold text-gray-800 mb-2">Connections</h2>
                 {connection.attributes.discord && <p>Discord: {connection.attributes.discord}</p>}
                 {connection.attributes.tetrio && <p>Tetr.io: {connection.attributes.tetrio}</p>}
+              </div>
+            )}
+
+            {/* Calendar Heatmaps */}
+            {(discordData.length > 0 || twitchData.length > 0) && (
+              <div className="mt-6 flex flex-col gap-6">
+                {/* Discord Heatmap */}
+                <div>
+                  <h3 className="font-semibold text-gray-800 mb-2">
+                    Discord Activity — Total: {totalCount(discordData)}
+                  </h3>
+                  <CalendarHeatmap
+                    startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))}
+                    endDate={new Date()}
+                    values={discordData}
+                    classForValue={(value) => ''}
+                    style={{}}
+                    gutterSize={2}
+                    transformDayElement={(rect, value, index) => (
+                      <Tooltip
+                        key={index}
+                        title={`${value?.date || 'N/A'}: ${value?.count || 0}`}
+                        placement="top"
+                      >
+                        {React.cloneElement(rect, {
+                          style: {
+                            fill: getColor(value?.count),
+                            stroke: '#ccc',
+                          },
+                        })}
+                      </Tooltip>
+                    )}
+                    showWeekdayLabels
+                  />
+                </div>
+
+                {/* Twitch Heatmap */}
+                <div>
+                  <h3 className="font-semibold text-gray-800 mb-2">
+                    Twitch Activity — Total: {totalCount(twitchData)}
+                  </h3>
+                  <CalendarHeatmap
+                    startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))}
+                    endDate={new Date()}
+                    values={twitchData}
+                    classForValue={(value) => ''}
+                    style={{}}
+                    gutterSize={2}
+                    transformDayElement={(rect, value, index) => (
+                      <Tooltip
+                        key={index}
+                        title={`${value?.date || 'N/A'}: ${value?.count || 0}`}
+                        placement="top"
+                      >
+                        {React.cloneElement(rect, {
+                          style: {
+                            fill: getColor(value?.count),
+                            stroke: '#ccc',
+                          },
+                        })}
+                      </Tooltip>
+                    )}
+                    showWeekdayLabels
+                  />
+                </div>
               </div>
             )}
           </div>
