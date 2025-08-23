@@ -44,7 +44,7 @@ const Heatmap = ({ content = {}, type = 'discord', showWeekdayLabels = true }) =
   const maxCount = Math.max(...values.map(v => v.count));
 
   const getColor = (count) => {
-    if (!count || count === 0) return '#eeeeee';
+    if (!count || count === 0) return '#ffffff';
 
     const ratio = count / maxCount;
     if (ratio < 0.2) return '#fff1b8';
