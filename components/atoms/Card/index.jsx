@@ -1,6 +1,11 @@
 import React from "react";
 
 const cardThemes = {
+  default: {
+    background: "#ffffff",
+    border: "#ebe6e7",
+    text: "#000000",
+  },
   theme: {
     background: "#fef9f3",
     border: "#f7b43d",
@@ -13,7 +18,7 @@ const cardThemes = {
   },
 };
 
-const Card = ({ color = "theme", style, children, ...props }) => {
+const Card = ({ color = "default", style, children, ...props }) => {
   const theme = cardThemes[color] || cardThemes.theme;
 
   return (
@@ -21,21 +26,13 @@ const Card = ({ color = "theme", style, children, ...props }) => {
       {...props}
       style={{
         backgroundColor: theme.background,
-        border: `2px solid ${theme.border}`,
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: theme.border,
         color: theme.text,
-        borderRadius: "1rem", // rounded corners
+        borderRadius: "10px",
         padding: "1rem",
-        boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
-        transition: "all 0.2s",
         ...style,
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = "0 6px 15px rgba(0,0,0,0.12)";
-        e.currentTarget.style.transform = "translateY(-2px)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = "0 4px 10px rgba(0,0,0,0.08)";
-        e.currentTarget.style.transform = "translateY(0)";
       }}
     >
       {children}
