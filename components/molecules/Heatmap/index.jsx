@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import { Tooltip } from 'antd';
 import 'react-calendar-heatmap/dist/styles.css';
@@ -13,18 +13,39 @@ const getColor = (count) => {
   return '#f7b43d';
 };
 
-const Heatmap = ({ values = [], title = '', showWeekdayLabels = true }) => {
-  const totalCount = (arr) => arr.reduce((sum, day) => sum + (day.count || 0), 0);
+const Heatmap = ({ content = {}, type = 'discord', title = '', showWeekdayLabels = true }) => {
+  const values = useMemo(() => {
+    const dates = [];
+    const today = new Date();
+    const start = new Date(today);
+    start.setFullYear(start.getFullYear() - 1);
+
+    for (let d = new Date(start); d <= today; d.setDate(d.getDate() + 1)) {
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const dateStr = `${yyyy}-${mm}-${dd}`;
+
+      dates.push({
+        date: dateStr,
+        count: content[dateStr]?.[`${type}MessageCount`] || 0
+      });
+    }
+
+    return dates;
+  }, [content, type]);
+
+  const totalCount = values.reduce((sum, day) => sum + (day.count || 0), 0);
 
   return (
     <div>
-      {title && <h3 className="font-semibold text-gray-800 mb-2">{title} — Total: {totalCount(values)}</h3>}
+      {title && <h3 className="font-semibold text-gray-800 mb-2">{title} — Total: {totalCount}</h3>}
       <CalendarHeatmap
         startDate={new Date(new Date().setFullYear(new Date().getFullYear() - 1))}
         endDate={new Date()}
         values={values}
         classForValue={() => ''}
-        gutterSize={2}
+        gutterSize={1}
         transformDayElement={(rect, value, index) => (
           <Tooltip
             key={index}
@@ -38,9 +59,12 @@ const Heatmap = ({ values = [], title = '', showWeekdayLabels = true }) => {
                 rx: 10,
                 ry: 10,
               },
+              width: rect.props.width - 1,
+              height: rect.props.height - 1
             })}
           </Tooltip>
         )}
+        weekdayLabels={["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]}
         showWeekdayLabels={showWeekdayLabels}
       />
     </div>

@@ -40,9 +40,6 @@ export default function UserPage() {
 
   const { user, connection, wallet, statistic, daily } = data;
 
-  const discordData = Array.isArray(daily?.discord) ? daily.discord : [];
-  const twitchData = Array.isArray(daily?.twitch) ? daily.twitch : [];
-
   return (
     <Template.Profile>
       <div className="container mx-auto py-5">
@@ -77,16 +74,24 @@ export default function UserPage() {
               </Atom.Card>
             )}
 
-            {discordData.length > 0 && (
-              <Atom.Card>
-                <Molecule.Heatmap values={discordData} title="Discord Activity" />
-              </Atom.Card>
-            )}
+            {daily?.attributes?.content && (
+              <>
+                <Atom.Card>
+                  <Molecule.Heatmap
+                    content={daily.attributes.content}
+                    type="discord"
+                    title="Discord Activity"
+                  />
+                </Atom.Card>
 
-            {twitchData.length > 0 && (
-              <Atom.Card>
-                <Molecule.Heatmap values={twitchData} title="Twitch Activity" />
-              </Atom.Card>
+                <Atom.Card>
+                  <Molecule.Heatmap
+                    content={daily.attributes.content}
+                    type="twitch"
+                    title="Twitch Activity"
+                  />
+                </Atom.Card>
+              </>
             )}
           </div>
 
