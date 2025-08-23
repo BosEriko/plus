@@ -57,9 +57,12 @@ export default function User() {
                     <img
                       src={user?.attributes?.profileImage || ''}
                       alt={user?.attributes?.displayName || 'User'}
-                      className="w-32 h-32 rounded-full border-5 border-white"
+                      className="w-32 h-32 rounded-full border-5 border-white shadow-lg"
                     />
-                    <h1 className="text-3xl font-bold text-white">
+                    <h1
+                      className="text-3xl font-bold text-white"
+                      style={{ textShadow: '0 0 5px rgba(0, 0, 0, 0.6)' }}
+                    >
                       {user?.attributes?.displayName || 'Unknown User'}
                     </h1>
                   </div>
