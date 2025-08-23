@@ -3,7 +3,13 @@
 import useAuthStore from '@stores/useAuthStore';
 import Link from 'next/link';
 import env from '@utilities/env';
-import { Button } from 'antd';
+import Atom from '@atom';
+import { Pixelify_Sans } from 'next/font/google';
+
+const pixelify = Pixelify_Sans({
+  subsets: ['latin'],
+  weight: ['700'],
+});
 
 const Header = () => {
   const { user, loading, logout } = useAuthStore();
@@ -15,7 +21,9 @@ const Header = () => {
   return (
     <header className="bg-white text-black">
       <div className="container mx-auto flex justify-between py-2 items-center">
-        <Link href="/">{env.siteName}</Link>
+        <Link href="/">
+          <h2 className={`${pixelify.className} text-4xl font-bold text-[#f7b43d]`}>BE+</h2>
+        </Link>
         <div>
           {loading ? (
             <div>loading...</div>
@@ -23,26 +31,19 @@ const Header = () => {
             <div>
               {user ? (
                 <div className="flex items-center gap-1">
-                  <Link
-                    href={`/user/${user.uid}`}
-                    className="ml-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 inline-block"
-                  >
-                    Profile
+                  <Link href={`/user/${user.uid}`} className="ml-4">
+                    <Atom.Button color="theme">
+                      Profile
+                    </Atom.Button>
                   </Link>
-                  <Button
-                    onClick={logout}
-                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                  >
+                  <Atom.Button onClick={logout} color="danger">
                     Logout
-                  </Button>
+                  </Atom.Button>
                 </div>
               ) : (
-                <Button
-                  onClick={handleLogin}
-                  className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-                >
+                <Atom.Button onClick={handleLogin} color="twitch">
                   Login
-                </Button>
+                </Atom.Button>
               )}
             </div>
           )}
