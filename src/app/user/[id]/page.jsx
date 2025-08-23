@@ -61,7 +61,7 @@ export default function UserPage() {
     <Template.Profile>
       <div className="container mx-auto py-5">
         {/* Cover Photo */}
-        <div className="relative w-full h-56 bg-gray-200 rounded-xl overflow-hidden">
+        <div className="relative w-full h-56 bg-gray-200 rounded-xl">
           {user.attributes.coverPhoto && (
             <img
               src={user.attributes.coverPhoto}
