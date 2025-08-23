@@ -5,6 +5,19 @@ import CalendarHeatmap from 'react-calendar-heatmap';
 import { Tooltip } from 'antd';
 import 'react-calendar-heatmap/dist/styles.css';
 
+const WEEKDAYLABEL_LEFT = 5;
+
+CalendarHeatmap.prototype.getTransformForWeekdayLabels = function () {
+  if (this.props.horizontal) {
+    return `translate(${WEEKDAYLABEL_LEFT}, ${this.getMonthLabelSize()})`;
+  }
+  return null;
+}
+
+CalendarHeatmap.prototype.getHeight = function () {
+  return this.getWeekWidth() + (this.getMonthLabelSize() - this.props.gutterSize);
+};
+
 const getColor = (count) => {
   if (!count || count === 0) return '#fff8e7';
   if (count < 5) return '#fff1b8';
@@ -64,7 +77,6 @@ const Heatmap = ({ content = {}, type = 'discord', title = '', showWeekdayLabels
             })}
           </Tooltip>
         )}
-        weekdayLabels={["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]}
         showWeekdayLabels={showWeekdayLabels}
       />
     </div>
