@@ -2,9 +2,9 @@ import Organism from "@organism";
 
 const Landing = ({ children }) => {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Organism.Header />
-      <div>{children}</div>
+      <div className="flex-1">{children}</div>
       <Organism.Footer />
     </div>
   );
