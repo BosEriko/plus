@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { Geist, Geist_Mono } from "next/font/google";
 import useAuthStore from '@stores/useAuthStore';
+import '@ant-design/v5-patch-for-react-19';
 import "./globals.css";
 
 const geistSans = Geist({
