@@ -38,14 +38,18 @@ export default function UserPage() {
   if (loading) return <Template.Profile>Loading...</Template.Profile>;
   if (error) return <Template.Profile>Error: {error}</Template.Profile>;
 
-  const { user, connection, wallet, statistic, daily } = data;
+  const user = data?.user;
+  const connection = data?.connection;
+  const wallet = data?.wallet;
+  const statistic = data?.statistic;
+  const daily = data?.daily;
 
   return (
     <Template.Profile>
       <div className="container mx-auto py-5">
         {/* Cover Photo */}
         <div className="relative w-full h-56 bg-gray-200 rounded-xl">
-          {user.attributes.coverPhoto && (
+          {user?.attributes?.coverPhoto && (
             <img
               src={user.attributes.coverPhoto}
               alt="Cover Photo"
@@ -54,8 +58,8 @@ export default function UserPage() {
           )}
           <div className="absolute bottom-[-40px] left-6">
             <img
-              src={user.attributes.profileImage}
-              alt={user.attributes.displayName}
+              src={user?.attributes?.profileImage || ''}
+              alt={user?.attributes?.displayName || 'User'}
               className="w-32 h-32 rounded-full border-4 border-white"
             />
           </div>
@@ -64,9 +68,11 @@ export default function UserPage() {
         {/* User Info */}
         <div className="mt-12 px-6 flex flex-col md:flex-row md:justify-between md:items-start gap-6">
           <div className="flex-1 flex gap-2 flex-col">
-            <h1 className="text-3xl font-bold text-[#f7b43d]">{user.attributes.displayName}</h1>
+            <h1 className="text-3xl font-bold text-[#f7b43d]">
+              {user?.attributes?.displayName || 'Unknown User'}
+            </h1>
 
-            {connection && (
+            {connection?.attributes && (
               <Atom.Card>
                 <h2 className="font-semibold text-gray-800 mb-2">Connections</h2>
                 {connection.attributes.discord && <p>Discord: {connection.attributes.discord}</p>}
@@ -76,17 +82,21 @@ export default function UserPage() {
 
             {daily?.attributes?.content && (
               <>
-                {connection.attributes.discord && <Atom.Card>
-                  <Molecule.Heatmap
-                    content={daily.attributes.content}
-                    type="discord"
-                  />
-                </Atom.Card>}
+                {daily.attributes.content && (
+                  <Atom.Card>
+                    <Molecule.Heatmap
+                      content={daily.attributes.content}
+                      type="discord"
+                      title="Discord Activity"
+                    />
+                  </Atom.Card>
+                )}
 
                 <Atom.Card>
                   <Molecule.Heatmap
                     content={daily.attributes.content}
                     type="twitch"
+                    title="Twitch Activity"
                   />
                 </Atom.Card>
               </>
@@ -94,22 +104,18 @@ export default function UserPage() {
           </div>
 
           <div className="flex flex-col gap-4 md:w-64">
-            {wallet && (
+            {wallet?.attributes && (
               <Atom.Card>
                 <h3 className="font-semibold text-gray-800">Wallet</h3>
-                <p className="text-xl font-bold text-[#f7b43d]">{wallet.attributes.coins} coins</p>
+                <p className="text-xl font-bold text-[#f7b43d]">{wallet.attributes.coins ?? 0} coins</p>
               </Atom.Card>
             )}
 
-            {statistic && (
+            {statistic?.attributes && (
               <Atom.Card>
                 <h3 className="font-semibold text-gray-800">Statistics</h3>
-                {statistic.attributes.discordMessageCount !== undefined && (
-                  <p>Discord Messages: {statistic.attributes.discordMessageCount}</p>
-                )}
-                {statistic.attributes.twitchMessageCount !== undefined && (
-                  <p>Twitch Messages: {statistic.attributes.twitchMessageCount}</p>
-                )}
+                <p>Discord Messages: {statistic.attributes.discordMessageCount ?? 0}</p>
+                <p>Twitch Messages: {statistic.attributes.twitchMessageCount ?? 0}</p>
               </Atom.Card>
             )}
           </div>
