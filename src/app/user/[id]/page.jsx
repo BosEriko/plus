@@ -2,7 +2,6 @@
 
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import ActivityCalendar from 'react-activity-calendar';
 import Template from '@template';
 import env from '@utilities/env';
 import Atom from '@atom';
@@ -40,13 +39,7 @@ export default function UserPage() {
 
   const { user, connection, wallet, statistic, daily } = data;
 
-  // Transform daily data for ActivityCalendar
-  const calendarData = daily
-    ? Object.entries(daily.attributes.content).map(([date, counts]) => ({
-        date,
-        count: Object.values(counts).reduce((a, b) => a + b, 0),
-      }))
-    : [];
+  console.log(daily);
 
   return (
     <Template.Profile>
@@ -80,8 +73,8 @@ export default function UserPage() {
           {connection && (
             <div className="mt-4">
               <h2 className="font-semibold text-gray-800 mb-2">Connections</h2>
-              <p>Discord: {connection.attributes.discord}</p>
-              <p>Tetr.io: {connection.attributes.tetrio}</p>
+              {connection.attributes.discord && <p>Discord: {connection.attributes.discord}</p>}
+              {connection.attributes.tetrio && <p>Tetr.io: {connection.attributes.tetrio}</p>}
             </div>
           )}
         </div>
@@ -97,25 +90,15 @@ export default function UserPage() {
           {statistic && (
             <Atom.Card className="p-4 rounded-xl shadow-md">
               <h3 className="font-semibold text-gray-800">Statistics</h3>
-              <p>Discord Messages: {statistic.attributes.discordMessageCount}</p>
-              <p>Twitch Messages: {statistic.attributes.twitchMessageCount}</p>
+              {statistic.attributes.discordMessageCount !== undefined && (
+                <p>Discord Messages: {statistic.attributes.discordMessageCount}</p>
+              )}
+              {statistic.attributes.twitchMessageCount !== undefined && (
+                <p>Twitch Messages: {statistic.attributes.twitchMessageCount}</p>
+              )}
             </Atom.Card>
           )}
         </div>
-      </div>
-
-      {/* Activity Calendar */}
-      <div className="mt-10 px-6">
-        <h2 className="text-2xl font-bold text-[#f7b43d] mb-4">Activity Calendar</h2>
-        <ActivityCalendar
-          data={calendarData}
-          blockSize={15}
-          blockMargin={5}
-          fontSize={14}
-          tooltipDataAttrs={(value) => ({
-            'data-tip': `${value.date}: ${value.count} messages`,
-          })}
-        />
       </div>
     </Template.Profile>
   );
