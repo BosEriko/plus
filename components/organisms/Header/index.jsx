@@ -3,6 +3,7 @@
 import useAuthStore from '@stores/useAuthStore';
 import Link from 'next/link';
 import env from '@utilities/env';
+import { Button } from 'antd';
 
 const Header = () => {
   const { user, loading, logout } = useAuthStore();
@@ -28,20 +29,20 @@ const Header = () => {
                   >
                     Profile
                   </Link>
-                  <button
+                  <Button
                     onClick={logout}
                     className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                   >
                     Logout
-                  </button>
+                  </Button>
                 </div>
               ) : (
-                <button
+                <Button
                   onClick={handleLogin}
                   className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
                 >
                   Login
-                </button>
+                </Button>
               )}
             </div>
           )}
