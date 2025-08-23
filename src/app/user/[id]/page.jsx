@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import ActivityCalendar from 'react-activity-calendar';
 import Template from '@template';
 import env from '@utilities/env';
+import Atom from '@atom';
 
 export default function UserPage() {
   const params = useParams();
@@ -49,41 +50,73 @@ export default function UserPage() {
 
   return (
     <Template.Profile>
-      <h1>{user.attributes.displayName}</h1>
-      <img
-        src={user.attributes.profileImage}
-        alt={user.attributes.displayName}
-        width={150}
-        height={150}
-      />
-      <p>Email: {user.attributes.email}</p>
-
-      {wallet && <p>Coins: {wallet.attributes.coins}</p>}
-
-      {statistic && (
-        <div>
-          <p>Discord Messages: {statistic.attributes.discordMessageCount}</p>
-          <p>Twitch Messages: {statistic.attributes.twitchMessageCount}</p>
+      {/* Cover Photo */}
+      <div className="relative w-full h-56 bg-gray-200 rounded-xl overflow-hidden">
+        {user.attributes.coverPhoto && (
+          <img
+            src={user.attributes.coverPhoto}
+            alt="Cover Photo"
+            className="w-full h-full object-cover"
+          />
+        )}
+        {/* Profile Picture */}
+        <div className="absolute bottom-[-40px] left-6">
+          <img
+            src={user.attributes.profileImage}
+            alt={user.attributes.displayName}
+            className="w-32 h-32 rounded-full border-4 border-white"
+          />
         </div>
-      )}
+      </div>
 
-      {connection && (
-        <div>
-          <p>Discord ID: {connection.attributes.discord}</p>
-          <p>Tetr.io ID: {connection.attributes.tetrio}</p>
+      {/* User Info */}
+      <div className="mt-16 px-6 flex flex-col md:flex-row md:justify-between md:items-start gap-6">
+        <div className="flex-1">
+          <h1 className="text-3xl font-bold text-[#f7b43d]">
+            {user.attributes.displayName}
+          </h1>
+          <p className="text-gray-700 mt-1">{user.attributes.email}</p>
+
+          {connection && (
+            <div className="mt-4">
+              <h2 className="font-semibold text-gray-800 mb-2">Connections</h2>
+              <p>Discord: {connection.attributes.discord}</p>
+              <p>Tetr.io: {connection.attributes.tetrio}</p>
+            </div>
+          )}
         </div>
-      )}
 
-      <h2>Activity Calendar</h2>
-      <ActivityCalendar
-        data={calendarData}
-        blockSize={15}
-        blockMargin={5}
-        fontSize={14}
-        tooltipDataAttrs={(value) => ({
-          'data-tip': `${value.date}: ${value.count} messages`,
-        })}
-      />
+        <div className="flex flex-col gap-4 md:w-64">
+          {wallet && (
+            <Atom.Card className="p-4 rounded-xl shadow-md">
+              <h3 className="font-semibold text-gray-800">Wallet</h3>
+              <p className="text-xl font-bold text-[#f7b43d]">{wallet.attributes.coins} coins</p>
+            </Atom.Card>
+          )}
+
+          {statistic && (
+            <Atom.Card className="p-4 rounded-xl shadow-md">
+              <h3 className="font-semibold text-gray-800">Statistics</h3>
+              <p>Discord Messages: {statistic.attributes.discordMessageCount}</p>
+              <p>Twitch Messages: {statistic.attributes.twitchMessageCount}</p>
+            </Atom.Card>
+          )}
+        </div>
+      </div>
+
+      {/* Activity Calendar */}
+      <div className="mt-10 px-6">
+        <h2 className="text-2xl font-bold text-[#f7b43d] mb-4">Activity Calendar</h2>
+        <ActivityCalendar
+          data={calendarData}
+          blockSize={15}
+          blockMargin={5}
+          fontSize={14}
+          tooltipDataAttrs={(value) => ({
+            'data-tip': `${value.date}: ${value.count} messages`,
+          })}
+        />
+      </div>
     </Template.Profile>
   );
 }
