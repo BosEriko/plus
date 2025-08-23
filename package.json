@@ -24,6 +24,7 @@
     "react": "^19.0.0",
     "react-calendar-heatmap": "^1.10.0",
     "react-dom": "^19.0.0",
+    "react-parallax": "^3.5.2",
     "zustand": "^5.0.8"
   },
   "devDependencies": {

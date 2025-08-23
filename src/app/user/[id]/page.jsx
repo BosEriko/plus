@@ -2,12 +2,13 @@
 
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import Template from '@template';
+import { Parallax } from 'react-parallax';
 import env from '@utilities/env';
+import Template from '@template';
 import Atom from '@atom';
 import Molecule from '@molecule';
 
-export default function UserPage() {
+export default function User() {
   const params = useParams();
   const userId = params.id;
 
@@ -47,31 +48,30 @@ export default function UserPage() {
   return (
     <Template.Profile>
       <div className="container mx-auto py-5">
-        {/* Cover Photo */}
-        <div className="relative w-full h-56 bg-gray-200 rounded-xl">
+        <div className="relative w-full bg-gray-200 rounded-xl">
           {user?.attributes?.coverPhoto && (
-            <img
-              src={user.attributes.coverPhoto}
-              alt="Cover Photo"
-              className="w-full h-full object-cover"
-            />
+            <div className="overflow-hidden rounded-xl">
+              <Parallax bgImage={user.attributes.coverPhoto} bgImageAlt="Cover Photo" blur={2}>
+                <div className="aspect-[16/4] flex items-center justify-center">
+                  <div className="flex flex-col gap-3">
+                    <img
+                      src={user?.attributes?.profileImage || ''}
+                      alt={user?.attributes?.displayName || 'User'}
+                      className="w-32 h-32 rounded-full border-5 border-white"
+                    />
+                    <h1 className="text-3xl font-bold text-white">
+                      {user?.attributes?.displayName || 'Unknown User'}
+                    </h1>
+                  </div>
+                </div>
+              </Parallax>
+            </div>
           )}
-          <div className="absolute bottom-[-40px] left-6">
-            <img
-              src={user?.attributes?.profileImage || ''}
-              alt={user?.attributes?.displayName || 'User'}
-              className="w-32 h-32 rounded-full border-4 border-white"
-            />
-          </div>
         </div>
 
         {/* User Info */}
         <div className="mt-12 px-6 flex flex-col md:flex-row md:justify-between md:items-start gap-6">
           <div className="flex-1 flex gap-2 flex-col">
-            <h1 className="text-3xl font-bold text-[#f7b43d]">
-              {user?.attributes?.displayName || 'Unknown User'}
-            </h1>
-
             {connection?.attributes && (
               <Atom.Card>
                 <h2 className="font-semibold text-gray-800 mb-2">Connections</h2>
