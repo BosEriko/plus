@@ -10,7 +10,9 @@ import {
   faYoutube,
   faTiktok,
   faInstagram,
+  faGithub,
 } from '@fortawesome/free-brands-svg-icons';
+import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { Tooltip } from 'antd';
 
 const Footer = () => {
@@ -28,6 +30,8 @@ const Footer = () => {
     { icon: faYoutube, title: 'YouTube', url: 'http://youtube.boseriko.com/' },
     { icon: faTiktok, title: 'TikTok', url: 'http://tiktok.boseriko.com/' },
     { icon: faInstagram, title: 'Instagram', url: 'http://instagram.boseriko.com/' },
+    { icon: faGithub, title: 'GitHub', url: 'http://github.boseriko.com/' },
+    { icon: faGlobe, title: 'Website', url: 'https://boseriko.com/' },
   ];
 
   return (
