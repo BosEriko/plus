@@ -11,7 +11,7 @@ import Atom from '@atom';
 
 export default function Join() {
   const params = useParams();
-  const userId = params.id;
+  const identifier = params.identifier;
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,12 +22,13 @@ export default function Join() {
   };
 
   useEffect(() => {
-    if (!userId) return;
+    if (!identifier) return;
 
     async function fetchUser() {
       try {
         setLoading(true);
-        const res = await fetch(`${env.server}/api/detail/twitch?id=${userId}`);
+        const queryParam = /^\d+$/.test(identifier) ? `id=${identifier}` : `username=${identifier}`;
+        const res = await fetch(`${env.server}/api/detail/twitch?${queryParam}`);
         if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
         const data = await res.json();
         setUser(data);
@@ -39,7 +40,7 @@ export default function Join() {
     }
 
     fetchUser();
-  }, [userId]);
+  }, [identifier]);
 
   useEffect(() => {
     if (user) {
