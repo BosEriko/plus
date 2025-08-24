@@ -41,6 +41,12 @@ export default function Join() {
     fetchUser();
   }, [userId]);
 
+  useEffect(() => {
+    if (user) {
+      document.title = `Join ${env.siteName} as ${user.display_name}`;
+    }
+  }, [user]);
+
   if (loading) {
     return (
       <Template.Join>
