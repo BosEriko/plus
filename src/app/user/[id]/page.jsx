@@ -15,9 +15,12 @@ export default function User() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(null);
 
   useEffect(() => {
     if (!userId) return;
+
+    let interval;
 
     const fetchProfile = async () => {
       try {
@@ -26,6 +29,21 @@ export default function User() {
 
         const json = await res.json();
         setData(json);
+
+        if (json.cacheExpiresIn !== undefined) {
+          setTimeLeft(json.cacheExpiresIn);
+
+          interval = setInterval(() => {
+            setTimeLeft((prev) => {
+              if (prev <= 1000) {
+                clearInterval(interval);
+                window.location.reload();
+                return 0;
+              }
+              return prev - 1000;
+            });
+          }, 1000);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -34,6 +52,10 @@ export default function User() {
     };
 
     fetchProfile();
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [userId]);
 
   if (loading) return <Template.Profile>Loading...</Template.Profile>;
@@ -44,6 +66,13 @@ export default function User() {
   const wallet = data?.wallet;
   const statistic = data?.statistic;
   const daily = data?.daily;
+
+  const formatTime = (ms) => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
 
   return (
     <Template.Profile>
@@ -72,7 +101,6 @@ export default function User() {
           )}
         </div>
 
-        {/* User Info */}
         <div className="mt-5 px-5 flex flex-col md:flex-row md:justify-between md:items-start gap-5">
           <div className="flex-1 flex gap-2 flex-col">
             {connection?.attributes && (
@@ -121,6 +149,8 @@ export default function User() {
                 <p>Twitch Messages: {statistic.attributes.twitchMessageCount ?? 0}</p>
               </Atom.Card>
             )}
+
+            {timeLeft !== null && timeLeft > 0 && <p className="text-sm text-gray-500 text-center">Updated Data On: {formatTime(timeLeft)}</p>}
           </div>
         </div>
       </div>
