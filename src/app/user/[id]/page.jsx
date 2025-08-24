@@ -150,7 +150,7 @@ export default function User() {
               </Atom.Card>
             )}
 
-            {timeLeft !== null && timeLeft > 0 && <p className="text-sm text-gray-500 text-center">Updated Data On: {formatTime(timeLeft)}</p>}
+            {timeLeft !== null && timeLeft > 0 && <p className="text-sm text-gray-500 text-center">Data will be updated {formatTime(timeLeft)}.</p>}
           </div>
         </div>
       </div>
