@@ -82,6 +82,33 @@ const useInitialDataStore = create((set, get) => ({
     }
   },
 
+  updateInitialDataField: (path, value) => {
+    const { initialData } = get();
+    if (!initialData) return;
+
+    const updatedData = structuredClone(initialData);
+    const keys = path.split(".");
+    let ref = updatedData;
+
+    for (let i = 0; i < keys.length - 1; i++) {
+      if (!(keys[i] in ref)) ref[keys[i]] = {};
+      ref = ref[keys[i]];
+    }
+
+    ref[keys[keys.length - 1]] = value;
+
+    set({ initialData: updatedData });
+
+    const cached = JSON.parse(safeLocalStorage.getItem(CACHE_KEY) || "{}");
+    safeLocalStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({
+        data: updatedData,
+        expiresAt: cached.expiresAt || Date.now(),
+      })
+    );
+  },
+
   clearCache: () => {
     safeLocalStorage.removeItem(CACHE_KEY);
     set({ initialData: null });
