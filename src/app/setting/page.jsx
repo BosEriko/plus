@@ -45,6 +45,7 @@ function SettingSuspense() {
       if (res.ok && data.success) {
         setTetrioMessage('✅ ' + data.message);
         setTetrioId(data.tetrio_id);
+        updateInitialDataField('connection.attributes.tetrio', data.id);
       } else {
         setTetrioMessage('❌ ' + data.message);
       }
