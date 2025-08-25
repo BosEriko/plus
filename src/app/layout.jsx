@@ -18,10 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export default function RootLayout({ children }) {
-  const initAuth = useAuthStore((state) => state.initAuth);
-  const user = useAuthStore((state) => state.user);
-  const token = useAuthStore((state) => state.token);
-  const fetchInitialData = useInitialDataStore((state) => state.fetchInitialData);
+  const { initAuth, user, token } = useAuthStore();
+  const { fetchInitialData } = useInitialDataStore();
 
   useEffect(() => {
     const unsubscribe = initAuth();
