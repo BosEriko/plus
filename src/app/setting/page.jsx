@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import env from '@utilities/env';
 import Template from '@template';
@@ -121,14 +121,13 @@ export default function Setting() {
   }
 
   return (
-    <Template.Profile>
-      <div className="container mx-auto my-4">
-        <div className="flex items-center">
-          <TetrioButton />
-          {initialData?.connection?.attributes?.discord}
-          <DiscordButton />
+    <Suspense fallback={<div>Loading settings...</div>}>
+      <Template.Profile>
+        <div className="container mx-auto my-4">
+          <div>{!!initialData?.connection?.attributes?.tetrio ? "Disconnect TETR.IO" : <TetrioButton />}</div>
+          <div>{!!initialData?.connection?.attributes?.discord ? "Disconnect Discord" : <DiscordButton />}</div>
         </div>
-      </div>
-    </Template.Profile>
+      </Template.Profile>
+    </Suspense>
   );
 }
