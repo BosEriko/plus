@@ -7,53 +7,48 @@ import Template from '@template';
 import useAuthStore from '@stores/useAuthStore';
 import useInitialDataStore from '@stores/useInitialDataStore';
 
-export default function Setting() {
+function SettingSuspense() {
   const searchParams = useSearchParams();
-  const { token, loading: authLoading } = useAuthStore();
-  const { initialData, updateInitialDataField, loading: dataLoading } = useInitialDataStore();
+  const { token } = useAuthStore();
+  const { initialData, updateInitialDataField } = useInitialDataStore();
   const [tetrioId, setTetrioId] = useState(null);
   const [tetrioUsername, setTetrioUsername] = useState('');
   const [loadingTetrio, setLoadingTetrio] = useState(false);
   const [tetrioMessage, setTetrioMessage] = useState('');
 
-  const handleConnectDiscord = async () => {
-    if (!token) {
-      alert('Please log in first');
-      return;
-    }
+  useEffect(() => {
+    const discordId = searchParams.get('discord');
+    if (!discordId) return;
+    if (initialData?.connection?.attributes?.discord === discordId) return;
+    updateInitialDataField('connection.attributes.discord', discordId);
+    window.history.replaceState({}, '', window.location.pathname);
+  }, [searchParams, initialData, updateInitialDataField]);
 
+  const handleConnectDiscord = async () => {
+    if (!token) return;
     window.location.href = `${env.server}/api/authentication/discord/connect?token=${encodeURIComponent(token)}`;
   };
 
   const handleConnectTetrio = async () => {
-    if (!token) {
-      setTetrioMessage('❌ Please log in first');
-      return;
-    }
-
+    if (!token) return setTetrioMessage('❌ Please log in first');
     try {
       setLoadingTetrio(true);
       setTetrioMessage('');
 
-      const response = await fetch(`${env.server}/api/authentication/tetrio/connect`, {
+      const res = await fetch(`${env.server}/api/authentication/tetrio/connect`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ username: tetrioUsername }),
       });
 
-      const data = await response.json();
-
-      if (response.ok && data.success) {
+      const data = await res.json();
+      if (res.ok && data.success) {
         setTetrioMessage('✅ ' + data.message);
         setTetrioId(data.tetrio_id);
       } else {
         setTetrioMessage('❌ ' + data.message);
       }
-    } catch (error) {
-      console.error('TETR.IO connection failed:', error);
+    } catch {
       setTetrioMessage('❌ Something went wrong. Please try again later.');
     } finally {
       setLoadingTetrio(false);
@@ -61,10 +56,7 @@ export default function Setting() {
   };
 
   const DiscordButton = () => (
-    <button
-      onClick={handleConnectDiscord}
-      className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-    >
+    <button onClick={handleConnectDiscord} className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
       Connect Discord
     </button>
   );
@@ -92,42 +84,33 @@ export default function Setting() {
         </div>
       )}
       {tetrioMessage && (
-        <p
-          className={`mt-2 text-sm ${
-            tetrioMessage.startsWith('✅') ? 'text-green-600' : 'text-red-600'
-          }`}
-        >
+        <p className={`mt-2 text-sm ${tetrioMessage.startsWith('✅') ? 'text-green-600' : 'text-red-600'}`}>
           {tetrioMessage}
         </p>
       )}
     </div>
   );
 
-  useEffect(() => {
-    const discordId = searchParams.get('discord');
-    if (!discordId) return;
-    if (initialData?.connection?.attributes?.discord === discordId) return;
-    updateInitialDataField('connection.attributes.discord', discordId);
-    const cleanUrl = window.location.pathname;
-    window.history.replaceState({}, '', cleanUrl);
-  }, [searchParams, initialData, updateInitialDataField]);
+  return (
+    <div className="container mx-auto my-4">
+      <div>{!!initialData?.connection?.attributes?.tetrio ? 'Disconnect TETR.IO' : <TetrioButton />}</div>
+      <div>{!!initialData?.connection?.attributes?.discord ? 'Disconnect Discord' : <DiscordButton />}</div>
+    </div>
+  );
+}
 
-  if (authLoading || dataLoading) {
-    return <div className="text-gray-600 p-4">Loading...</div>;
-  }
+export default function Setting() {
+  const { token, loading: authLoading } = useAuthStore();
+  const { loading: dataLoading } = useInitialDataStore();
 
-  if (!token) {
-    return <div className="text-gray-600 p-4">Please log in first</div>;
-  }
+  if (authLoading || dataLoading) return <div className="text-gray-600 p-4">Loading...</div>;
+  if (!token) return <div className="text-gray-600 p-4">Please log in first</div>;
 
   return (
-    <Suspense fallback={<div>Loading settings...</div>}>
-      <Template.Profile>
-        <div className="container mx-auto my-4">
-          <div>{!!initialData?.connection?.attributes?.tetrio ? "Disconnect TETR.IO" : <TetrioButton />}</div>
-          <div>{!!initialData?.connection?.attributes?.discord ? "Disconnect Discord" : <DiscordButton />}</div>
-        </div>
-      </Template.Profile>
-    </Suspense>
+    <Template.Profile>
+      <Suspense fallback={<div>Loading settings...</div>}>
+        <SettingSuspense />
+      </Suspense>
+    </Template.Profile>
   );
 }
