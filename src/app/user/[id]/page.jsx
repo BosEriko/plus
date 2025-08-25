@@ -58,6 +58,12 @@ export default function User() {
     };
   }, [userId]);
 
+  useEffect(() => {
+    if (data) {
+      document.title = `${data?.user?.attributes?.displayName || 'User'}'s Profile | ${user.siteName}`;
+    }
+  }, [data]);
+
   if (loading) return <Template.Profile>Loading...</Template.Profile>;
   if (error) return <Template.Profile>Error: {error}</Template.Profile>;
 
@@ -82,7 +88,7 @@ export default function User() {
             <div className="overflow-hidden rounded-b-xl">
               <Parallax bgImage={user.attributes.coverPhoto} bgImageAlt="Cover Photo" blur={2}>
                 <div className="aspect-[16/4] flex items-center justify-center">
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-3 items-center justify-center">
                     <img
                       src={user?.attributes?.profileImage || ''}
                       alt={user?.attributes?.displayName || 'User'}
@@ -145,7 +151,7 @@ export default function User() {
             {statistic?.attributes && (
               <Atom.Card>
                 <h3 className="font-semibold text-gray-800">Statistics</h3>
-                <p>Discord Messages: {statistic.attributes.discordMessageCount ?? 0}</p>
+                {connection?.attributes?.discord && <p>Discord Messages: {statistic.attributes.discordMessageCount ?? 0}</p>}
                 <p>Twitch Messages: {statistic.attributes.twitchMessageCount ?? 0}</p>
               </Atom.Card>
             )}
