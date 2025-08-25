@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import env from '@utilities/env';
 import Template from '@template';
 import useAuthStore from '@stores/useAuthStore';
 import useInitialDataStore from '@stores/useInitialDataStore';
 
 export default function Setting() {
+  const searchParams = useSearchParams();
   const { token, loading: authLoading } = useAuthStore();
   const { initialData, updateInitialDataField, loading: dataLoading } = useInitialDataStore();
   const [tetrioId, setTetrioId] = useState(null);
@@ -101,6 +103,15 @@ export default function Setting() {
     </div>
   );
 
+  useEffect(() => {
+    const discordId = searchParams.get('discord');
+    if (!discordId) return;
+    if (initialData?.connection?.attributes?.discord === discordId) return;
+    updateInitialDataField('connection.attributes.discord', discordId);
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, '', cleanUrl);
+  }, [searchParams, initialData, updateInitialDataField]);
+
   if (authLoading || dataLoading) {
     return <div className="text-gray-600 p-4">Loading...</div>;
   }
@@ -112,27 +123,9 @@ export default function Setting() {
   return (
     <Template.Profile>
       <div className="container mx-auto my-4">
-        {typeof window !== "undefined" && window.location.hostname === "localhost" && (
-          <div className="p-4 mt-4 border border-gray-300 rounded bg-gray-50">
-            <div className="font-semibold mb-2">Usage Instructions (Localhost Only)</div>
-            <div>To update after success endpoint:</div>
-            <div className="font-mono text-sm text-blue-600">
-              {'updateInitialDataField("connection.attributes.discord", "NEW DATA");'}
-            </div>
-            <div className="font-mono text-sm text-blue-600">
-              {'updateInitialDataField("connection.attributes.tetrio", "NEW DATA");'}
-            </div>
-            <div className="mt-2">To get Initial data:</div>
-            <div className="font-mono text-sm text-green-600">
-              {'initialData?.connection?.attributes?.discord'}
-            </div>
-            <div className="font-mono text-sm text-green-600">
-              {'initialData?.connection?.attributes?.tetrio'}
-            </div>
-          </div>
-        )}
         <div className="flex items-center">
           <TetrioButton />
+          {initialData?.connection?.attributes?.discord}
           <DiscordButton />
         </div>
       </div>
