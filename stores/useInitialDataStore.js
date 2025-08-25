@@ -47,7 +47,7 @@ const useInitialDataStore = create((set, get) => ({
         CACHE_KEY,
         JSON.stringify({
           data,
-          expiresAt: Date.now() + data.cacheExpiresIn, // TTL from backend
+          expiresAt: Date.now() + data.cacheExpiresIn,
         })
       );
 

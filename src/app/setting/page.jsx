@@ -4,9 +4,11 @@ import { useState } from 'react';
 import env from '@utilities/env';
 import Template from '@template';
 import useAuthStore from '@stores/useAuthStore';
+import useInitialDataStore from '@stores/useInitialDataStore';
 
 export default function Setting() {
-  const { token, loading } = useAuthStore();
+  const { token, loading: authLoading } = useAuthStore();
+  const { initialData, loading: dataLoading } = useInitialDataStore();
   const [tetrioId, setTetrioId] = useState(null);
   const [tetrioUsername, setTetrioUsername] = useState('');
   const [loadingTetrio, setLoadingTetrio] = useState(false);
@@ -65,6 +67,8 @@ export default function Setting() {
     </button>
   );
 
+  if (initialData) console.log(initialData);
+
   const TetrioButton = () => (
     <div>
       {tetrioId ? (
@@ -99,7 +103,7 @@ export default function Setting() {
     </div>
   );
 
-  if (loading) {
+  if (authLoading || dataLoading) {
     return <div className="text-gray-600 p-4">Loading...</div>;
   }
 
