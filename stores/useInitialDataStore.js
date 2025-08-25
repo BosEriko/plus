@@ -5,6 +5,29 @@ import env from '@utilities/env';
 
 const CACHE_KEY = "initialData";
 
+const safeLocalStorage = {
+  getItem: (key) => {
+    if (typeof window === "undefined") return null;
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  },
+  setItem: (key, value) => {
+    if (typeof window === "undefined") return;
+    try {
+      localStorage.setItem(key, value);
+    } catch {}
+  },
+  removeItem: (key) => {
+    if (typeof window === "undefined") return;
+    try {
+      localStorage.removeItem(key);
+    } catch {}
+  },
+};
+
 const useInitialDataStore = create((set, get) => ({
   initialData: null,
   loading: false,
@@ -16,7 +39,7 @@ const useInitialDataStore = create((set, get) => ({
     const { initialData } = get();
     if (initialData) return initialData;
 
-    const cached = localStorage.getItem(CACHE_KEY);
+    const cached = safeLocalStorage.getItem(CACHE_KEY);
     if (cached) {
       const parsed = JSON.parse(cached);
       const now = Date.now();
@@ -25,7 +48,7 @@ const useInitialDataStore = create((set, get) => ({
         set({ initialData: parsed.data });
         return parsed.data;
       } else {
-        localStorage.removeItem(CACHE_KEY);
+        safeLocalStorage.removeItem(CACHE_KEY);
       }
     }
 
@@ -43,7 +66,7 @@ const useInitialDataStore = create((set, get) => ({
 
       set({ initialData: data, loading: false });
 
-      localStorage.setItem(
+      safeLocalStorage.setItem(
         CACHE_KEY,
         JSON.stringify({
           data,
@@ -60,7 +83,7 @@ const useInitialDataStore = create((set, get) => ({
   },
 
   clearCache: () => {
-    localStorage.removeItem(CACHE_KEY);
+    safeLocalStorage.removeItem(CACHE_KEY);
     set({ initialData: null });
   },
 }));
