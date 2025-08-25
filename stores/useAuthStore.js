@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '@utilities/firebase';
+import useInitialDataStore from './useInitialDataStore';
 
 const useAuthStore = create((set) => ({
   user: null,
@@ -19,6 +20,7 @@ const useAuthStore = create((set) => ({
           loading: false,
         });
       } else {
+        useInitialDataStore.getState().clearCache();
         set({
           user: null,
           token: null,
@@ -30,6 +32,7 @@ const useAuthStore = create((set) => ({
 
   logout: async () => {
     await signOut(auth);
+    useInitialDataStore.getState().clearCache();
     set({ user: null, token: null });
   },
 }));
