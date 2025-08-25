@@ -7,7 +7,7 @@ import env from '@utilities/env';
 import Atom from '@atom';
 import { Pixelify_Sans } from 'next/font/google';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faSignOutAlt, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faSignOutAlt, faBars, faTimes, faCog } from '@fortawesome/free-solid-svg-icons';
 import { faTwitch } from '@fortawesome/free-brands-svg-icons';
 
 const pixelify = Pixelify_Sans({
@@ -40,6 +40,19 @@ const Header = () => {
               <div className="flex gap-1 items-center justify-center">
                 <FontAwesomeIcon icon={faUser} className="mr-1" />
                 <div>Profile</div>
+              </div>
+            </Atom.Button>
+          </Link>
+
+          <Link
+            href={`/setting`}
+            onClick={() => isMobile && setMenuOpen(false)}
+            className={isMobile ? 'w-full' : ''}
+          >
+            <Atom.Button color="primary" className={isMobile ? 'w-full' : ''}>
+              <div className="flex gap-1 items-center justify-center">
+                <FontAwesomeIcon icon={faCog} className="mr-1" />
+                <div>Setting</div>
               </div>
             </Atom.Button>
           </Link>

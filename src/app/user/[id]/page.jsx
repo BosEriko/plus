@@ -106,14 +106,14 @@ export default function User() {
             {connection?.attributes && (
               <Atom.Card>
                 <h2 className="font-semibold text-gray-800 mb-2">Connections</h2>
-                {connection.attributes.discord && <p>Discord: {connection.attributes.discord}</p>}
-                {connection.attributes.tetrio && <p>Tetr.io: {connection.attributes.tetrio}</p>}
+                {connection.attributes?.discord && <p>Discord: {connection.attributes.discord}</p>}
+                {connection.attributes?.tetrio && <p>Tetr.io: {connection.attributes.tetrio}</p>}
               </Atom.Card>
             )}
 
             {daily?.attributes?.content && (
               <>
-                {daily.attributes.content && (
+                {connection?.attributes?.discord && (
                   <Atom.Card>
                     <Molecule.Heatmap
                       content={daily.attributes.content}
