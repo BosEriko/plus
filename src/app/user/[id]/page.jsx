@@ -72,6 +72,7 @@ export default function User() {
   const wallet = data?.wallet;
   const statistic = data?.statistic;
   const daily = data?.daily;
+  const tetrio = data?.tetrio;
 
   const formatTime = (ms) => {
     const totalSeconds = Math.floor(ms / 1000);
@@ -110,11 +111,31 @@ export default function User() {
         <div className="mt-5 px-5 flex flex-col md:flex-row md:justify-between md:items-start gap-5">
           <div className="flex-1 flex gap-2 flex-col">
             {connection?.attributes && (
-              <Atom.Card>
-                <h2 className="font-semibold text-gray-800 mb-2">Connections</h2>
-                {connection.attributes?.discord && <p>Discord: {connection.attributes.discord}</p>}
-                {connection.attributes?.tetrio && <p>Tetr.io: {connection.attributes.tetrio}</p>}
-              </Atom.Card>
+              <div className="flex gap-2 mb-2">
+                {connection.attributes?.discord && (
+                  <Atom.Button
+                    color="pink"
+                    style={{ width: "100%" }}
+                    onClick={() =>
+                      window.open(`https://discord.com/users/${connection.attributes.discord}`, "_blank")
+                    }
+                  >
+                    Send Discord Message
+                  </Atom.Button>
+                )}
+
+                {tetrio && (
+                  <Atom.Button
+                    color="purple"
+                    style={{ width: "100%" }}
+                    onClick={() =>
+                      window.open(`https://ch.tetr.io/u/${tetrio?.username}`, "_blank")
+                    }
+                  >
+                    View TETR.IO Profile
+                  </Atom.Button>
+                )}
+              </div>
             )}
 
             {daily?.attributes?.content && (
