@@ -7,11 +7,58 @@ import Template from '@template';
 import useAuthStore from '@stores/useAuthStore';
 import useInitialDataStore from '@stores/useInitialDataStore';
 
+const TetrioButton = ({
+  tetrioId,
+  tetrioUsername,
+  setTetrioUsername,
+  handleConnectTetrio,
+  loadingTetrio,
+  tetrioMessage,
+}) => (
+  <div>
+    {tetrioId ? (
+      <span className="text-green-600 font-semibold">TETR.IO Connected</span>
+    ) : (
+      <div className="flex gap-2 items-center">
+        <input
+          type="text"
+          placeholder="Enter TETR.IO username"
+          value={tetrioUsername}
+          onChange={(e) => setTetrioUsername(e.target.value)}
+          className="border px-4 py-2 rounded"
+        />
+        <button
+          onClick={handleConnectTetrio}
+          disabled={loadingTetrio || !tetrioUsername}
+          className="ml-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400"
+        >
+          {loadingTetrio ? 'Connecting...' : 'Connect TETR.IO'}
+        </button>
+      </div>
+    )}
+    {tetrioMessage && (
+      <p className={`mt-2 text-sm ${tetrioMessage.startsWith('✅') ? 'text-green-600' : 'text-red-600'}`}>
+        {tetrioMessage}
+      </p>
+    )}
+  </div>
+);
+
+const DiscordButton = ({ handleConnectDiscord }) => (
+  <button
+    onClick={handleConnectDiscord}
+    className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+  >
+    Connect Discord
+  </button>
+);
+
 function SettingSuspense() {
   const searchParams = useSearchParams();
-  const { token } = useAuthStore();
+  const { token, logout } = useAuthStore();
   const { initialData, updateInitialDataField } = useInitialDataStore();
-  const [tetrioId, setTetrioId] = useState(null);
+
+  const [tetrioId, setTetrioId] = useState(initialData?.connection?.attributes?.tetrio || null);
   const [tetrioUsername, setTetrioUsername] = useState('');
   const [loadingTetrio, setLoadingTetrio] = useState(false);
   const [tetrioMessage, setTetrioMessage] = useState('');
@@ -24,7 +71,7 @@ function SettingSuspense() {
     window.history.replaceState({}, '', window.location.pathname);
   }, [searchParams, initialData, updateInitialDataField]);
 
-  const handleConnectDiscord = async () => {
+  const handleConnectDiscord = () => {
     if (!token) return;
     window.location.href = `${env.server}/api/authentication/discord/connect?token=${encodeURIComponent(token)}`;
   };
@@ -56,46 +103,35 @@ function SettingSuspense() {
     }
   };
 
-  const DiscordButton = () => (
-    <button onClick={handleConnectDiscord} className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-      Connect Discord
-    </button>
-  );
-
-  const TetrioButton = () => (
-    <div>
-      {tetrioId ? (
-        <span className="text-green-600 font-semibold">TETR.IO Connected</span>
-      ) : (
-        <div className="flex gap-2 items-center">
-          <input
-            type="text"
-            placeholder="Enter TETR.IO username"
-            value={tetrioUsername}
-            onChange={(e) => setTetrioUsername(e.target.value)}
-            className="border px-4 py-2 rounded"
-          />
-          <button
-            onClick={handleConnectTetrio}
-            disabled={loadingTetrio || !tetrioUsername}
-            className="ml-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400"
-          >
-            {loadingTetrio ? 'Connecting...' : 'Connect TETR.IO'}
-          </button>
-        </div>
-      )}
-      {tetrioMessage && (
-        <p className={`mt-2 text-sm ${tetrioMessage.startsWith('✅') ? 'text-green-600' : 'text-red-600'}`}>
-          {tetrioMessage}
-        </p>
-      )}
-    </div>
-  );
-
   return (
-    <div className="container mx-auto my-4">
-      <div>{!!initialData?.connection?.attributes?.tetrio ? 'Disconnect TETR.IO' : <TetrioButton />}</div>
-      <div>{!!initialData?.connection?.attributes?.discord ? 'Disconnect Discord' : <DiscordButton />}</div>
+    <div className="container mx-auto my-4 flex flex-col gap-4">
+      <div>
+        {!!initialData?.connection?.attributes?.tetrio ? (
+          <span className="text-green-600 font-semibold">TETR.IO Connected</span>
+        ) : (
+          <TetrioButton
+            tetrioId={tetrioId}
+            tetrioUsername={tetrioUsername}
+            setTetrioUsername={setTetrioUsername}
+            handleConnectTetrio={handleConnectTetrio}
+            loadingTetrio={loadingTetrio}
+            tetrioMessage={tetrioMessage}
+          />
+        )}
+      </div>
+
+      <div>
+        {!!initialData?.connection?.attributes?.discord ? (
+          <span className="text-blue-600 font-semibold">Discord Connected</span>
+        ) : (
+          <DiscordButton handleConnectDiscord={handleConnectDiscord} />
+        )}
+      </div>
+
+      <div>
+        {/* on success of this, log the account out */}
+        <span className="text-blue-600 font-semibold">Deactivate Account</span>
+      </div>
     </div>
   );
 }
