@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Parallax } from 'react-parallax';
 import env from '@utilities/env';
 import Template from '@template';
@@ -17,10 +17,10 @@ export default function User() {
   const [error, setError] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
 
+  const intervalRef = useRef(null);
+
   useEffect(() => {
     if (!userId) return;
-
-    let interval;
 
     const fetchProfile = async () => {
       try {
@@ -33,10 +33,12 @@ export default function User() {
         if (json.cacheExpiresIn !== undefined) {
           setTimeLeft(json.cacheExpiresIn);
 
-          interval = setInterval(() => {
+          if (intervalRef.current) clearInterval(intervalRef.current);
+
+          intervalRef.current = setInterval(() => {
             setTimeLeft((prev) => {
               if (prev <= 1000) {
-                clearInterval(interval);
+                clearInterval(intervalRef.current);
                 window.location.reload();
                 return 0;
               }
@@ -54,7 +56,7 @@ export default function User() {
     fetchProfile();
 
     return () => {
-      if (interval) clearInterval(interval);
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [userId]);
 
