@@ -62,7 +62,7 @@ export default function User() {
 
   useEffect(() => {
     if (data) {
-      document.title = `${data?.user?.attributes?.displayName || 'User'}'s Profile | ${user.siteName}`;
+      document.title = `${data?.user?.attributes?.displayName || 'User'}'s Profile | ${env.siteName}`;
     }
   }, [data]);
 
