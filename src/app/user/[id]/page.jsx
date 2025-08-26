@@ -87,9 +87,13 @@ export default function User() {
     <Template.Profile>
       <div className="container mx-auto pb-5">
         <div className="relative w-full bg-gray-200 rounded-xl">
-          {user?.attributes?.coverPhoto && (
+          {user?.attributes?.coverPhoto ? (
             <div className="overflow-hidden rounded-b-xl">
-              <Parallax bgImage={user.attributes.coverPhoto} bgImageAlt="Cover Photo" blur={2}>
+              <Parallax
+                bgImage={user.attributes.coverPhoto}
+                bgImageAlt="Cover Photo"
+                blur={2}
+              >
                 <div className="aspect-[16/4] flex items-center justify-center">
                   <div className="flex flex-col gap-3 items-center justify-center">
                     <img
@@ -106,6 +110,46 @@ export default function User() {
                   </div>
                 </div>
               </Parallax>
+            </div>
+          ) : (
+            <div className="overflow-hidden rounded-b-xl relative">
+              <div className="aspect-[16/4] bg-[#f7b43d] relative">
+                <div className="absolute inset-0 opacity-20 scale-110 flex flex-col justify-center">
+                  {Array.from({ length: 8 }).map((_, rowIndex) => (
+                    <div
+                      key={rowIndex}
+                      className="flex whitespace-nowrap"
+                      style={{
+                        transform: `translateX(${(rowIndex % 2) * 150}px)`, // alternate horizontal offset
+                      }}
+                    >
+                      {Array.from({ length: 16 }).map((_, colIndex) => (
+                        <span
+                          key={colIndex}
+                          className="text-white font-extrabold text-6xl tracking-wider mx-8"
+                        >
+                          {user?.attributes?.displayName || 'Unknown User'}
+                        </span>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="flex flex-col gap-3 items-center justify-center z-10">
+                    <img
+                      src={user?.attributes?.profileImage || ''}
+                      alt={user?.attributes?.displayName || 'User'}
+                      className="w-32 h-32 rounded-full border-5 border-white shadow-lg"
+                    />
+                    <h1
+                      className="text-3xl font-bold text-white"
+                      style={{ textShadow: '0 0 5px rgba(0, 0, 0, 0.6)' }}
+                    >
+                      {user?.attributes?.displayName || 'Unknown User'}
+                    </h1>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>
