@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import env from '@utilities/env';
 import Template from '@template';
+import Atom from '@atom';
 import useAuthStore from '@stores/useAuthStore';
 import useInitialDataStore from '@stores/useInitialDataStore';
 
@@ -65,10 +66,10 @@ const TetrioButton = () => {
   };
 
   return (
-    <div>
+    <Atom.Card>
+      <h3 className="font-semibold text-gray-800 mb-2">TETR.IO</h3>
       {connected ? (
         <div className="flex gap-2 items-center">
-          <span className="text-green-600 font-semibold">TETR.IO Connected</span>
           <button
             onClick={handleDisconnect}
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
@@ -84,14 +85,14 @@ const TetrioButton = () => {
             placeholder="Enter TETR.IO username"
             value={tetrioUsername}
             onChange={(e) => setTetrioUsername(e.target.value)}
-            className="border px-4 py-2 rounded"
+            className="border px-4 py-2 rounded flex-1"
           />
           <button
             onClick={handleConnect}
             disabled={loading || !tetrioUsername}
             className="ml-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400"
           >
-            {loading ? 'Connecting...' : 'Connect TETR.IO'}
+            {loading ? 'Connecting...' : 'Connect'}
           </button>
         </div>
       )}
@@ -100,7 +101,7 @@ const TetrioButton = () => {
           {message}
         </p>
       )}
-    </div>
+    </Atom.Card>
   );
 };
 
@@ -135,10 +136,10 @@ const DiscordButton = () => {
   };
 
   return (
-    <div className="flex gap-2 items-center">
+    <Atom.Card>
+      <h3 className="font-semibold text-gray-800 mb-2">Discord</h3>
       {discordId ? (
-        <>
-          <span className="text-blue-600 font-semibold">Discord Connected</span>
+        <div className="flex gap-2 items-center">
           <button
             onClick={handleDisconnect}
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
@@ -146,16 +147,16 @@ const DiscordButton = () => {
           >
             {loading ? 'Disconnecting...' : 'Disconnect'}
           </button>
-        </>
+        </div>
       ) : (
         <button
           onClick={handleConnect}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-          Connect Discord
+          Connect
         </button>
       )}
-    </div>
+    </Atom.Card>
   );
 };
 
@@ -180,8 +181,8 @@ const DeactivateButton = () => {
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-red-600 font-semibold">Deactivate Account</span>
+    <Atom.Card>
+      <h3 className="font-semibold text-gray-800 mb-2">{env.siteName}</h3>
       <button
         onClick={handleDeactivate}
         disabled={loading}
@@ -189,7 +190,7 @@ const DeactivateButton = () => {
       >
         {loading ? 'Deactivating...' : 'Deactivate'}
       </button>
-    </div>
+    </Atom.Card>
   );
 };
 
@@ -206,10 +207,18 @@ function SettingSuspense() {
   }, [searchParams, initialData, updateInitialDataField]);
 
   return (
-    <div className="container mx-auto my-4 flex flex-col gap-4">
-      <TetrioButton />
-      <DiscordButton />
-      <DeactivateButton />
+    <div className="container mx-auto my-4">
+      <div className="flex flex-col md:flex-row md:gap-4 gap-4">
+        <div className="flex-1">
+          <TetrioButton />
+        </div>
+        <div className="flex-1">
+          <DiscordButton />
+        </div>
+        <div className="flex-1">
+          <DeactivateButton />
+        </div>
+      </div>
     </div>
   );
 }
@@ -225,7 +234,7 @@ export default function Setting() {
     }
   }, [authLoading, token, router]);
 
-  if (authLoading || dataLoading) return <div className="text-gray-600 p-4">Loading...</div>;
+  if (authLoading || dataLoading) return <Template.Profile>Loading...</Template.Profile>;
 
   return (
     <Template.Profile>
