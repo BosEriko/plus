@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import env from '@utilities/env';
 import Template from '@template';
 import useAuthStore from '@stores/useAuthStore';
 import useInitialDataStore from '@stores/useInitialDataStore';
 
-// TetrioButton handles its own state and token
 const TetrioButton = () => {
   const { token } = useAuthStore();
   const { initialData, updateInitialDataField } = useInitialDataStore();
@@ -105,7 +104,6 @@ const TetrioButton = () => {
   );
 };
 
-// DiscordButton handles its own state and token
 const DiscordButton = () => {
   const { token } = useAuthStore();
   const { initialData, updateInitialDataField } = useInitialDataStore();
@@ -161,7 +159,6 @@ const DiscordButton = () => {
   );
 };
 
-// DeactivateButton manages its own state and token
 const DeactivateButton = () => {
   const { token, logout } = useAuthStore();
   const [loading, setLoading] = useState(false);
@@ -200,7 +197,6 @@ function SettingSuspense() {
   const searchParams = useSearchParams();
   const { initialData, updateInitialDataField } = useInitialDataStore();
 
-  // Keep the discord query param logic
   useEffect(() => {
     const discordId = searchParams.get('discord');
     if (!discordId) return;
@@ -221,9 +217,15 @@ function SettingSuspense() {
 export default function Setting() {
   const { token, loading: authLoading } = useAuthStore();
   const { loading: dataLoading } = useInitialDataStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!authLoading && !token) {
+      router.push('/');
+    }
+  }, [authLoading, token, router]);
 
   if (authLoading || dataLoading) return <div className="text-gray-600 p-4">Loading...</div>;
-  if (!token) return <div className="text-gray-600 p-4">Please log in first</div>;
 
   return (
     <Template.Profile>
