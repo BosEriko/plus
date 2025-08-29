@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import useAuthStore from '@stores/useAuthStore';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import env from '@utilities/env';
 import Atom from '@atom';
 import { Pixelify_Sans } from 'next/font/google';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faSignOutAlt, faBars, faTimes, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faSignOutAlt, faBars, faTimes, faCog, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faTwitch } from '@fortawesome/free-brands-svg-icons';
 
 const pixelify = Pixelify_Sans({
@@ -18,9 +19,20 @@ const pixelify = Pixelify_Sans({
 const Header = () => {
   const { user, loading, logout } = useAuthStore();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
 
   const handleLogin = () => {
     window.location.href = `${env.server}/api/authentication/twitch/login`;
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?query=${encodeURIComponent(searchQuery)}`);
+      setSearchQuery('');
+      if (menuOpen) setMenuOpen(false);
+    }
   };
 
   const AuthButtons = ({ isMobile = false }) => {
@@ -92,7 +104,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white text-black border-b-1 border-gray-200">
+    <header className="bg-white text-black border-b border-gray-200">
       <div className="container mx-auto flex justify-between items-center py-3 px-4 md:px-6">
         <Link href="/">
           <h2 className={`${pixelify.className} text-3xl md:text-4xl font-bold text-[#f7b43d]`}>
@@ -100,7 +112,22 @@ const Header = () => {
           </h2>
         </Link>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-4">
+          <form onSubmit={handleSearch} className="relative flex items-center">
+            <input
+              type="text"
+              placeholder="Search BosEriko+"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#f7b43d] w-64"
+            />
+            <button
+              type="submit"
+              className="absolute right-2 text-gray-500 hover:text-black"
+            >
+              <FontAwesomeIcon icon={faSearch} />
+            </button>
+          </form>
           <AuthButtons />
         </div>
 
@@ -115,8 +142,23 @@ const Header = () => {
       </div>
 
       {menuOpen && (
-        <div className="md:hidden bg-white border-t-1 border-gray-200">
+        <div className="md:hidden bg-white border-t border-gray-200">
           <div className="flex flex-col p-4 gap-3">
+            <form onSubmit={handleSearch} className="relative flex items-center mb-3">
+              <input
+                type="text"
+                placeholder="Search games..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#f7b43d]"
+              />
+              <button
+                type="submit"
+                className="absolute right-3 text-gray-500 hover:text-black"
+              >
+                <FontAwesomeIcon icon={faSearch} />
+              </button>
+            </form>
             <AuthButtons isMobile />
           </div>
         </div>
