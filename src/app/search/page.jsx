@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import useAuthStore from '@stores/useAuthStore';
 import React, { useEffect, useState, Suspense } from 'react';
 import env from '@utilities/env';
@@ -20,6 +20,7 @@ const uniqueBy = (array, keyFn) => {
 function SearchSuspense() {
   const { token } = useAuthStore();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const query = searchParams.get('query') || '';
 
   const [results, setResults] = useState({
@@ -61,7 +62,6 @@ function SearchSuspense() {
         const data = await response.json();
 
         if (!data.success) {
-          // Special handling for rate limit error
           if (data.status === '429' || data.type === 'RateLimitException') {
             setError(
               'You are being rate-limited. Please wait a few seconds and try again.'
@@ -70,11 +70,10 @@ function SearchSuspense() {
             setError(data.message || 'Something went wrong.');
           }
         } else {
-          // Deduplicate results before setting state
           setResults({
-            games: uniqueBy(data.results.games || [], (g) => g.id),
-            anime: uniqueBy(data.results.anime || [], (a) => a.mal_id),
-            manga: uniqueBy(data.results.manga || [], (m) => m.mal_id),
+            games: uniqueBy(data.results.games || [], (g) => g.name),
+            anime: uniqueBy(data.results.anime || [], (a) => a.name),
+            manga: uniqueBy(data.results.manga || [], (m) => m.name),
           });
         }
       } catch (err) {
@@ -87,17 +86,50 @@ function SearchSuspense() {
     fetchResults();
   }, [query, token]);
 
+  // Helper: Get release year safely
+  const getYear = (date) => {
+    if (!date) return 'N/A';
+    const parsed = new Date(date);
+    return isNaN(parsed.getFullYear()) ? 'N/A' : parsed.getFullYear();
+  };
+
+  // Card UI
+  const Card = ({ item, type }) => {
+    const thumbnail =
+      item.thumbnail?.startsWith('//') ? 'https:' + item.thumbnail : item.thumbnail;
+    const year = item.year || 'N/A';
+
+    // Handle routing when clicked
+    const handleClick = () => {
+      router.push(`/${type}/${item.id}`);
+    };
+
+    return (
+      <div
+        onClick={handleClick}
+        className="flex items-center p-3 border rounded-xl shadow hover:shadow-lg transition duration-200 bg-white cursor-pointer"
+      >
+        <div
+          className="w-24 h-24 flex-shrink-0 rounded-lg bg-gray-200 bg-center bg-cover"
+          style={{
+            backgroundImage: `url(${thumbnail})`,
+          }}
+        ></div>
+        <div className="ml-4 flex flex-col justify-center">
+          <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
+          <p className="text-sm text-gray-500">{year}</p>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Template.Search>
       <h1 className="text-2xl font-bold mb-4 text-center">Search Results</h1>
 
-      {/* Loading State */}
       {loading && <p className="text-blue-500">Searching for results...</p>}
-
-      {/* Error State */}
       {error && <p className="text-red-500">{error}</p>}
 
-      {/* Results */}
       {!loading && !error && (
         <div className="container mx-auto space-y-8">
           {/* Games */}
@@ -106,24 +138,9 @@ function SearchSuspense() {
               <h2 className="text-xl font-semibold mb-3">
                 Games ({results.games.length})
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {results.games.map((game) => (
-                  <div
-                    key={`game-${game.id}`}
-                    className="p-4 border rounded-lg shadow hover:shadow-lg transition duration-200 bg-white"
-                  >
-                    <h3 className="text-lg font-semibold">{game.name}</h3>
-                    {game.slug && (
-                      <a
-                        href={`https://www.igdb.com/games/${game.slug}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 underline"
-                      >
-                        View on IGDB
-                      </a>
-                    )}
-                  </div>
+              <div className="space-y-3">
+                {results.games.map((game, index) => (
+                  <Card key={`game-${game.id || index}`} item={game} type="game" />
                 ))}
               </div>
             </div>
@@ -135,24 +152,9 @@ function SearchSuspense() {
               <h2 className="text-xl font-semibold mb-3">
                 Anime ({results.anime.length})
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {results.anime.map((anime) => (
-                  <div
-                    key={`anime-${anime.mal_id}`}
-                    className="p-4 border rounded-lg shadow hover:shadow-lg transition duration-200 bg-white"
-                  >
-                    <h3 className="text-lg font-semibold">{anime.title}</h3>
-                    {anime.url && (
-                      <a
-                        href={anime.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 underline"
-                      >
-                        View on MyAnimeList
-                      </a>
-                    )}
-                  </div>
+              <div className="space-y-3">
+                {results.anime.map((anime, index) => (
+                  <Card key={`anime-${anime.id || index}`} item={anime} type="anime" />
                 ))}
               </div>
             </div>
@@ -164,24 +166,9 @@ function SearchSuspense() {
               <h2 className="text-xl font-semibold mb-3">
                 Manga ({results.manga.length})
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {results.manga.map((manga) => (
-                  <div
-                    key={`manga-${manga.mal_id}`}
-                    className="p-4 border rounded-lg shadow hover:shadow-lg transition duration-200 bg-white"
-                  >
-                    <h3 className="text-lg font-semibold">{manga.title}</h3>
-                    {manga.url && (
-                      <a
-                        href={manga.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 underline"
-                      >
-                        View on MyAnimeList
-                      </a>
-                    )}
-                  </div>
+              <div className="space-y-3">
+                {results.manga.map((manga, index) => (
+                  <Card key={`manga-${manga.id || index}`} item={manga} type="manga" />
                 ))}
               </div>
             </div>
@@ -189,7 +176,6 @@ function SearchSuspense() {
         </div>
       )}
 
-      {/* No Results */}
       {!loading &&
         !error &&
         query &&
