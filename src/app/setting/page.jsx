@@ -207,19 +207,21 @@ function SettingSuspense() {
   }, [searchParams, initialData, updateInitialDataField]);
 
   return (
-    <div className="container mx-auto my-4">
-      <div className="flex flex-col md:flex-row md:gap-4 gap-4">
-        <div className="flex-1">
-          <TetrioButton />
-        </div>
-        <div className="flex-1">
-          <DiscordButton />
-        </div>
-        <div className="flex-1">
-          <DeactivateButton />
+    <Template.Profile>
+      <div className="container mx-auto my-4">
+        <div className="flex flex-col md:flex-row md:gap-4 gap-4">
+          <div className="flex-1">
+            <TetrioButton />
+          </div>
+          <div className="flex-1">
+            <DiscordButton />
+          </div>
+          <div className="flex-1">
+            <DeactivateButton />
+          </div>
         </div>
       </div>
-    </div>
+    </Template.Profile>
   );
 }
 
@@ -237,10 +239,8 @@ export default function Setting() {
   if (authLoading || dataLoading) return <Template.Profile>Loading...</Template.Profile>;
 
   return (
-    <Template.Profile>
-      <Suspense fallback={<div>Loading settings...</div>}>
-        <SettingSuspense />
-      </Suspense>
-    </Template.Profile>
+    <Suspense fallback={<div>Loading settings...</div>}>
+      <SettingSuspense />
+    </Suspense>
   );
 }

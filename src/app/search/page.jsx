@@ -2,11 +2,11 @@
 
 import { useSearchParams } from 'next/navigation';
 import useAuthStore from '@stores/useAuthStore';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import env from '@utilities/env';
 import Template from '@template';
 
-export default function Search() {
+function SearchSuspense() {
   const { token } = useAuthStore();
   const searchParams = useSearchParams();
   const query = searchParams.get('query') || '';
@@ -33,7 +33,7 @@ export default function Search() {
         }
 
         const response = await fetch(
-          `${env.server}/api/game/search?search=${encodeURIComponent(query)}`,
+          `${env.server}/api/data/search?search=${encodeURIComponent(query)}`,
           {
             method: 'POST',
             headers: {
@@ -99,5 +99,13 @@ export default function Search() {
         <p className="text-gray-500">No games found for "{query}".</p>
       )}
     </Template.Search>
+  );
+}
+
+export default function Search() {
+  return (
+    <Suspense fallback={<div>Loading settings...</div>}>
+      <SearchSuspense />
+    </Suspense>
   );
 }
