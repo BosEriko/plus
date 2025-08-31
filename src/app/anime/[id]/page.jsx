@@ -20,19 +20,14 @@ export default function AnimeProfile() {
 
   useEffect(() => {
     if (userLoading) return;
-    if (!token) {
-      setError('Unauthorized');
-      setLoading(false);
-      return;
-    }
 
     if (!animeId) return;
 
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`${env.server}/api/anime/profile/${animeId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const options = {};
+        if (token) options.headers = { Authorization: `Bearer ${token}` };
+        const res = await fetch(`${env.server}/api/anime/profile/${animeId}`, options);
 
         if (res.status === 401) throw new Error('Unauthorized');
         if (!res.ok) throw new Error('Failed to fetch anime profile');

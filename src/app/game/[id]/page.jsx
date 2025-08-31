@@ -20,19 +20,14 @@ export default function GameProfile() {
 
   useEffect(() => {
     if (userLoading) return;
-    if (!token) {
-      setError('Unauthorized');
-      setLoading(false);
-      return;
-    }
 
     if (!gameId) return;
 
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`${env.server}/api/game/profile/${gameId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const options = {};
+        if (token) options.headers = { Authorization: `Bearer ${token}` };
+        const res = await fetch(`${env.server}/api/game/profile/${gameId}`, options);
 
         if (res.status === 401) throw new Error('Unauthorized');
         if (!res.ok) throw new Error('Failed to fetch game profile');
