@@ -110,11 +110,21 @@ function SearchSuspense() {
         className="flex items-center p-3 border rounded-xl shadow hover:shadow-lg transition duration-200 bg-white cursor-pointer"
       >
         <div
-          className="w-24 h-24 flex-shrink-0 rounded-lg bg-gray-200 bg-center bg-cover"
+          className={`w-24 h-24 flex-shrink-0 rounded-lg bg-gray-200 bg-center bg-cover relative overflow-hidden ${
+            item.nsfw ? 'blur-sm' : ''
+          }`}
           style={{
             backgroundImage: `url(${thumbnail})`,
           }}
-        ></div>
+        >
+          {item.nsfw && (
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-xs font-semibold rounded-lg">
+              NSFW
+            </div>
+          )}
+        </div>
+
+        {/* Info */}
         <div className="ml-4 flex flex-col justify-center">
           <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
           <p className="text-sm text-gray-500">{year}</p>
