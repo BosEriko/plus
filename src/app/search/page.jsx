@@ -1,7 +1,6 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import useAuthStore from '@stores/useAuthStore';
 import React, { useEffect, useState, Suspense } from 'react';
 import env from '@utilities/env';
 import Template from '@template';
@@ -18,7 +17,6 @@ const uniqueBy = (array, keyFn) => {
 };
 
 function SearchSuspense() {
-  const { token } = useAuthStore();
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = searchParams.get('query') || '';
@@ -42,19 +40,12 @@ function SearchSuspense() {
       setError('');
 
       try {
-        if (!token) {
-          setError('User is not authenticated.');
-          setLoading(false);
-          return;
-        }
-
         const response = await fetch(
           `${env.server}/api/data/search?query=${encodeURIComponent(query)}`,
           {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -84,7 +75,7 @@ function SearchSuspense() {
     };
 
     fetchResults();
-  }, [query, token]);
+  }, [query]);
 
   // Helper: Get release year safely
   const getYear = (date) => {
