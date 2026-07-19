@@ -18,7 +18,7 @@ export default function Join() {
   const [error, setError] = useState(null);
 
   const handleLogin = () => {
-    window.location.href = `${env.server}/api/authentication/twitch/login`;
+    window.location.href = `${env.server}/legacy/authentication/twitch/login`;
   };
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function Join() {
       try {
         setLoading(true);
         const queryParam = /^\d+$/.test(identifier) ? `id=${identifier}` : `username=${identifier}`;
-        const res = await fetch(`${env.server}/api/detail/twitch?${queryParam}`);
+        const res = await fetch(`${env.server}/legacy/detail/twitch?${queryParam}`);
         if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
         const data = await res.json();
         setUser(data);

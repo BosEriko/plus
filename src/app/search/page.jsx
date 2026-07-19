@@ -41,7 +41,7 @@ function SearchSuspense() {
 
       try {
         const response = await fetch(
-          `${env.server}/api/data/search?query=${encodeURIComponent(query)}`,
+          `${env.server}/legacy/data/search?query=${encodeURIComponent(query)}`,
           {
             method: 'POST',
             headers: {

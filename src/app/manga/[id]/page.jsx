@@ -27,7 +27,7 @@ export default function MangaProfile() {
       try {
         const options = {};
         if (token) options.headers = { Authorization: `Bearer ${token}` };
-        const res = await fetch(`${env.server}/api/manga/profile/${mangaId}`, options);
+        const res = await fetch(`${env.server}/legacy/manga/profile/${mangaId}`, options);
 
         if (res.status === 401) throw new Error('Unauthorized');
         if (!res.ok) throw new Error('Failed to fetch manga profile');

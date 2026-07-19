@@ -27,7 +27,7 @@ export default function AnimeProfile() {
       try {
         const options = {};
         if (token) options.headers = { Authorization: `Bearer ${token}` };
-        const res = await fetch(`${env.server}/api/anime/profile/${animeId}`, options);
+        const res = await fetch(`${env.server}/legacy/anime/profile/${animeId}`, options);
 
         if (res.status === 401) throw new Error('Unauthorized');
         if (!res.ok) throw new Error('Failed to fetch anime profile');

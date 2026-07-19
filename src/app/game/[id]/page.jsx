@@ -27,7 +27,7 @@ export default function GameProfile() {
       try {
         const options = {};
         if (token) options.headers = { Authorization: `Bearer ${token}` };
-        const res = await fetch(`${env.server}/api/game/profile/${gameId}`, options);
+        const res = await fetch(`${env.server}/legacy/game/profile/${gameId}`, options);
 
         if (res.status === 401) throw new Error('Unauthorized');
         if (!res.ok) throw new Error('Failed to fetch game profile');

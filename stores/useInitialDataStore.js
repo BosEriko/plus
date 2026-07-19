@@ -55,7 +55,7 @@ const useInitialDataStore = create((set, get) => ({
     try {
       set({ loading: true, error: null });
 
-      const res = await fetch(`${env.server}/api/data/initial`, {
+      const res = await fetch(`${env.server}/legacy/data/initial`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

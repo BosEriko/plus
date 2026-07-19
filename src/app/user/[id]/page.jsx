@@ -24,7 +24,7 @@ export default function User() {
 
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`${env.server}/api/user/profile/${userId}`);
+        const res = await fetch(`${env.server}/legacy/user/profile/${userId}`);
         if (!res.ok) throw new Error('Failed to fetch profile');
 
         const json = await res.json();

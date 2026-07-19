@@ -24,7 +24,7 @@ const TetrioButton = () => {
     try {
       setLoading(true);
       setMessage('');
-      const res = await fetch(`${env.server}/api/authentication/tetrio/connect`, {
+      const res = await fetch(`${env.server}/legacy/authentication/tetrio/connect`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ username: tetrioUsername }),
@@ -47,7 +47,7 @@ const TetrioButton = () => {
     if (!token) return;
     try {
       setLoading(true);
-      const res = await fetch(`${env.server}/api/tetrio/disconnect`, {
+      const res = await fetch(`${env.server}/legacy/tetrio/disconnect`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -114,14 +114,14 @@ const DiscordButton = () => {
 
   const handleConnect = () => {
     if (!token) return;
-    window.location.href = `${env.server}/api/authentication/discord/connect?token=${encodeURIComponent(token)}`;
+    window.location.href = `${env.server}/legacy/authentication/discord/connect?token=${encodeURIComponent(token)}`;
   };
 
   const handleDisconnect = async () => {
     if (!token) return;
     try {
       setLoading(true);
-      const res = await fetch(`${env.server}/api/discord/disconnect`, {
+      const res = await fetch(`${env.server}/legacy/discord/disconnect`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -168,7 +168,7 @@ const DeactivateButton = () => {
     if (!token) return;
     try {
       setLoading(true);
-      const res = await fetch(`${env.server}/api/user/deactivate`, {
+      const res = await fetch(`${env.server}/legacy/user/deactivate`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });

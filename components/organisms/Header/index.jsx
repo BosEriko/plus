@@ -23,7 +23,7 @@ const Header = () => {
   const router = useRouter();
 
   const handleLogin = () => {
-    window.location.href = `${env.server}/api/authentication/twitch/login`;
+    window.location.href = `${env.server}/legacy/authentication/twitch/login`;
   };
 
   const handleSearch = (e) => {
